@@ -103,7 +103,7 @@
       if (!taxable && !zero && !exempt) {
          if (/應\s*稅/.test(text) && !/零\s*稅/.test(text) && !/免\s*稅/.test(text)) taxable = "V";
       }
-      return taxable ? "V" : (zero ? "Zero" : (exempt ? "")); 
+      return taxable ? "V" : (zero ? "Zero" : (exempt ? "Exempt" : ""));
     }
 
     function parseInvoiceHeader(lines) {

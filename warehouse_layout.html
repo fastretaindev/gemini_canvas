@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>儲位平面管理系統</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50">
+  <div id="app"></div>
+
+  <script>
+    const APP_VERSION = '1.7.0';
+
+    const state = {
+      activeRack: null,
+      viewScale: 0.9,
+      selectedFloor: 'All',
+      isFloorMenuOpen: false,
+      filterPid: '',
+      filterSku: '',
+      showLayoutConfig: false,
+      layoutApi: 'https://docs.google.com/spreadsheets/d/1aaT3s9oxOGrfoWCdfx08Z4lFMJMTKT4SpQSn0iujhY0/edit?gid=1337119032#gid=1337119032',
+      rackData: {},
+      showDetailConfig: false,
+      detailApi: 'https://docs.google.com/spreadsheets/d/1ajtzj2phj2JLAdTlis2KnMHxqnA6lXRE44vQFSXVWug/edit?gid=0#gid=0',
+      inventoryDetails: {},
+      loading: false,
+      error: null,
+      testResults: []
+    };
+
+    const rows = Array.from({ length: 16 }, (_, i) => 16 - i);
+    const colGroups = [
+      { id: 'EG', gap: false }, { id: 's1', gap: true },
+      { id: 'EH', gap: false }, { id: 'EI', gap: false }, { id: 's2', gap: true },
+      { id: 'EJ', gap: false }, { id: 'EK', gap: false }, { id: 's3', gap: true },
+      { id: 'EL', gap: false }, { id: 'EM', gap: false }, { id: 's4', gap: true },
+      { id: 'EN', gap: false }, { id: 'EO', gap: false }, { id: 's5', gap: true },
+      { id: 'EP', gap: false }, { id: 'EQ', gap: false }
+    ];
+    const topRackIds = ['FC04', '', 'FC06', '', '', 'FC09', 'FC10', 'FC11', 'FC12', 'FC13'];
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function iconSvg(path, className = 'w-4 h-4') {
+      return '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="' + className + '">' + path + '</svg>';
+    }
+
+    const icons = {
+      map: (c='w-5 h-5') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2V6Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 4v14" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 6v14" />', c),
+      shield: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" /><path stroke-linecap="round" stroke-linejoin="round" d="m9 12 2 2 4-4" />', c),
+      layers: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M12 3 3 8l9 5 9-5-9-5Z" /><path stroke-linecap="round" stroke-linejoin="round" d="m3 12 9 5 9-5" /><path stroke-linecap="round" stroke-linejoin="round" d="m3 16 9 5 9-5" />', c),
+      chevronDown: (c='w-3 h-3') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />', c),
+      settings: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 19v2" /><path stroke-linecap="round" stroke-linejoin="round" d="m4.93 4.93 1.41 1.41" /><path stroke-linecap="round" stroke-linejoin="round" d="m17.66 17.66 1.41 1.41" /><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h2" /><path stroke-linecap="round" stroke-linejoin="round" d="M19 12h2" /><path stroke-linecap="round" stroke-linejoin="round" d="m4.93 19.07 1.41-1.41" /><path stroke-linecap="round" stroke-linejoin="round" d="m17.66 6.34 1.41-1.41" /><circle cx="12" cy="12" r="3" />', c),
+      clipboard: (c='w-4 h-4') => iconSvg('<rect x="8" y="2" width="8" height="4" rx="1" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6M9 16h6M9 8h6" />', c),
+      database: (c='w-4 h-4') => iconSvg('<ellipse cx="12" cy="5" rx="7" ry="3" /><path stroke-linecap="round" stroke-linejoin="round" d="M5 5v6c0 1.7 3.1 3 7 3s7-1.3 7-3V5" /><path stroke-linecap="round" stroke-linejoin="round" d="M5 11v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" />', c),
+      tag: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M20 12 12 20 4 12V4h8l8 8Z" /><circle cx="8.5" cy="8.5" r="0.5" fill="currentColor" stroke="none" />', c),
+      zoomIn: (c='w-5 h-5') => iconSvg('<circle cx="11" cy="11" r="7" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35" /><path stroke-linecap="round" stroke-linejoin="round" d="M11 8v6M8 11h6" />', c),
+      zoomOut: (c='w-5 h-5') => iconSvg('<circle cx="11" cy="11" r="7" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 11h6" />', c),
+      info: (c='w-4 h-4') => iconSvg('<circle cx="12" cy="12" r="10" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 8h.01" />', c),
+      box: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="m21 16-9 5-9-5" /><path stroke-linecap="round" stroke-linejoin="round" d="m21 8-9 5-9-5 9-5 9 5Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M3 8v8" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 8v8" /><path stroke-linecap="round" stroke-linejoin="round" d="m12 13 0 8" />', c),
+      download: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16" />', c),
+      alert: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 17h.01" />', c),
+      x: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6 6 18" />', c),
+      refresh: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 0 0-15.55-6.36L3 8" /><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v5h5" /><path stroke-linecap="round" stroke-linejoin="round" d="M3 12a9 9 0 0 0 15.55 6.36L21 16" /><path stroke-linecap="round" stroke-linejoin="round" d="M16 16h5v5" />', c),
+      grid: (c='w-3 h-3') => iconSvg('<rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />', c)
+    };
+
+    function parseCsvLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const next = line[i + 1];
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result;
+    }
+
+    function fetchSheetUrl(endpoint) {
+      const text = String(endpoint || '');
+      if (!text.includes('docs.google.com') || text.includes('gviz/tq')) return text;
+      const match = text.match(/\/d\/([^/]+)/);
+      const gidMatch = text.match(/gid=(\d+)/);
+      if (!match) return text;
+      return 'https://docs.google.com/spreadsheets/d/' + match[1] + '/gviz/tq?tqx=out:csv&gid=' + (gidMatch ? gidMatch[1] : '0');
+    }
+
+    function transformLayout(rawData) {
+      const newMap = {};
+      rawData.forEach(row => {
+        const id = String(row.zone_shelf_code || row.id || row.ID || row['儲位編號'] || row['儲座'] || '').trim().toUpperCase();
+        if (!id) return;
+        const category = String(row.category || row.Category || row['合作模式'] || '一般').trim();
+        const rawQty = row.qty || row.Qty || row['數量'] || row['庫存數'] || 0;
+        let finalQty = 0;
+        let breakdown = null;
+
+        if (typeof rawQty === 'string' && rawQty.includes('|')) {
+          const parts = rawQty.split('|').map(v => Number(v) || 0);
+          finalQty = parts.reduce((acc, val) => acc + val, 0);
+          if (parts.length >= 2) breakdown = { buy: parts[0], consign: parts[1] };
+        } else {
+          finalQty = Number(rawQty) || 0;
+          if (finalQty > 0) {
+            if (category.includes('買斷')) breakdown = { buy: finalQty, consign: 0 };
+            else if (category.includes('寄售') || category.includes('寄倉')) breakdown = { buy: 0, consign: finalQty };
+          }
+        }
+
+        const slotCode = String(row.slot_code || row['slot_code'] || '').trim();
+        const level = Number(row.level || row.Level || 0);
+        if (!newMap[id]) {
+          newMap[id] = { id, level, category, totalQty: 0, totalBreakdown: null, layers: [] };
+        }
+        newMap[id].totalQty += finalQty;
+        newMap[id].layers.push({ slotCode, qty: finalQty, breakdown, category });
+        if (breakdown) {
+          if (!newMap[id].totalBreakdown) newMap[id].totalBreakdown = { buy: 0, consign: 0 };
+          newMap[id].totalBreakdown.buy += breakdown.buy;
+          newMap[id].totalBreakdown.consign += breakdown.consign;
+        }
+      });
+      return newMap;
+    }
+
+    function transformDetails(rawData) {
+      const detailMap = {};
+      rawData.forEach(row => {
+        const rackId = String(row['儲座'] || row.rack_id || row.id || row.zone_shelf_code || '').trim().toUpperCase();
+        if (!rackId) return;
+        if (!detailMap[rackId]) detailMap[rackId] = [];
+        detailMap[rackId].push({
+          brand: row['品牌'] || '未知',
+          pid: row['商品id'] || 'N/A',
+          sku: row['sku'] || 'N/A',
+          name: row['品名'] || '未命名商品',
+          qty: Number(row['庫存數'] || 0),
+          floor: String(row['樓層'] || '01').trim(),
+          mode: row['合作模式'] || '一般'
+        });
+      });
+      return detailMap;
+    }
+
+    async function fetchSheetData(endpoint) {
+      const response = await fetch(fetchSheetUrl(endpoint));
+      if (!response.ok) throw new Error('連線失敗，請檢查網址與共享權限。');
+      const text = await response.text();
+      const lines = String(text).split(/\r?\n/).filter(l => l.trim());
+      if (lines.length === 0) return [];
+      const cols = parseCsvLine(lines[0]).map(h => h.replace(/^"|"$/g, ''));
+      return lines.slice(1).map(line => {
+        const vals = parseCsvLine(line).map(v => v.replace(/^"|"$/g, ''));
+        const row = {};
+        cols.forEach((col, i) => { row[col] = vals[i] ?? ''; });
+        return row;
+      });
+    }
+
+    function runSmokeTests() {
+      return [
+        { name: 'CSV basic', pass: JSON.stringify(parseCsvLine('a,b,c')) === JSON.stringify(['a','b','c']) },
+        { name: 'CSV quoted comma', pass: JSON.stringify(parseCsvLine('a,"b,c",d')) === JSON.stringify(['a','b,c','d']) },
+        { name: 'Sheet URL convert', pass: fetchSheetUrl('https://docs.google.com/spreadsheets/d/abc123/edit?gid=55#gid=55') === 'https://docs.google.com/spreadsheets/d/abc123/gviz/tq?tqx=out:csv&gid=55' },
+        { name: 'Layout transform', pass: !!transformLayout([{ 儲座: 'eg01', 庫存數: '3', 合作模式: '買斷', slot_code: '01' }]).EG01 },
+        { name: 'Detail transform', pass: !!transformDetails([{ 儲座: 'eg01', 商品id: 'P1', sku: 'S1', 庫存數: '2' }]).EG01 }
+      ];
+    }
+
+    function availableFloors() {
+      const floors = new Set();
+      Object.values(state.inventoryDetails).forEach(items => {
+        items.forEach(item => {
+          if (item.floor && item.floor.length <= 3) floors.add(item.floor);
+        });
+      });
+      Object.values(state.rackData).forEach(rack => {
+        (rack.layers || []).forEach(layer => {
+          if (layer.slotCode && layer.slotCode.length <= 3) floors.add(layer.slotCode);
+        });
+      });
+      return Array.from(floors).sort();
+    }
+
+    function filterDetailItem(item) {
+      const matchFloor = state.selectedFloor === 'All' || item.floor === state.selectedFloor;
+      const matchPid = state.filterPid.trim() === '' || String(item.pid).toLowerCase().includes(state.filterPid.toLowerCase().trim());
+      const matchSku = state.filterSku.trim() === '' || String(item.sku).toLowerCase().includes(state.filterSku.toLowerCase().trim());
+      return matchFloor && matchPid && matchSku;
+    }
+
+    function getEffectiveData(id) {
+      const hasDetailSearch = state.filterPid.trim() !== '' || state.filterSku.trim() !== '';
+      if (hasDetailSearch) {
+        const filtered = (state.inventoryDetails[id] || []).filter(filterDetailItem);
+        if (filtered.length === 0) return { qty: 0, category: '' };
+        const qty = filtered.reduce((acc, i) => acc + i.qty, 0);
+        const cats = Array.from(new Set(filtered.map(i => i.mode || '一般')));
+        const hasBuy = cats.some(c => c.includes('買斷'));
+        const hasConsign = cats.some(c => c.includes('寄售') || c.includes('寄倉'));
+        return { qty, category: hasBuy && hasConsign ? '混合' : (cats[0] || '') };
+      }
+      const rack = state.rackData[id];
+      if (!rack) return { qty: 0, category: '' };
+      if (state.selectedFloor === 'All') return { qty: rack.totalQty || 0, category: rack.category || '' };
+      const layers = (rack.layers || []).filter(l => l.slotCode === state.selectedFloor);
+      const qty = layers.reduce((acc, l) => acc + (l.qty || 0), 0);
+      const cats = Array.from(new Set(layers.map(l => l.category)));
+      const hasBuy = cats.some(c => c.includes('買斷'));
+      const hasConsign = cats.some(c => c.includes('寄售') || c.includes('寄倉'));
+      return { qty, category: hasBuy && hasConsign ? '混合' : (cats[0] || '') };
+    }
+
+    function getConditionColor(id) {
+      const data = getEffectiveData(id);
+      if (data.qty === 0) return 'bg-white border-slate-200 text-slate-300';
+      if (String(data.category).includes('買斷')) return 'bg-emerald-600 border-emerald-700 text-white shadow-sm';
+      if (String(data.category).includes('寄售') || String(data.category).includes('寄倉')) return 'bg-gray-200 border-gray-300 text-gray-700';
+      if (String(data.category).includes('混合')) return 'bg-yellow-300 border-yellow-400 text-yellow-900';
+      return 'bg-blue-50 border-blue-200 text-blue-600';
+    }
+
+    function getRackStats(id) {
+      let buyQty = 0;
+      let consignQty = 0;
+      let hasData = false;
+      const hasDetailSearch = state.filterPid.trim() !== '' || state.filterSku.trim() !== '';
+      const details = state.inventoryDetails[id];
+      if (details && details.length > 0) {
+        const filtered = details.filter(filterDetailItem);
+        if (filtered.length > 0) {
+          buyQty = filtered.filter(i => String(i.mode || '').includes('買斷')).reduce((acc, i) => acc + i.qty, 0);
+          consignQty = filtered.filter(i => !String(i.mode || '').includes('買斷')).reduce((acc, i) => acc + i.qty, 0);
+          hasData = true;
+        }
+      }
+      if (!hasData && !hasDetailSearch) {
+        const rack = state.rackData[id];
+        if (rack) {
+          if (state.selectedFloor === 'All' && rack.totalBreakdown) {
+            buyQty = rack.totalBreakdown.buy;
+            consignQty = rack.totalBreakdown.consign;
+            hasData = true;
+          } else if (state.selectedFloor !== 'All') {
+            (rack.layers || []).filter(l => l.slotCode === state.selectedFloor).forEach(l => {
+              if (l.breakdown) {
+                buyQty += l.breakdown.buy;
+                consignQty += l.breakdown.consign;
+                hasData = true;
+              }
+            });
+          }
+        }
+      }
+      const total = buyQty + consignQty;
+      if (!hasData || total === 0) return null;
+      const bPct = Math.round((buyQty / total) * 100);
+      return '(' + bPct + '%/' + (100 - bPct) + '%)';
+    }
+
+    function activeRackId() {
+      return state.activeRack ? state.activeRack.col + String(state.activeRack.row).padStart(2, '0') : null;
+    }
+
+    function filteredSideDetails() {
+      const rackId = activeRackId();
+      return rackId ? (state.inventoryDetails[rackId] || []).filter(filterDetailItem) : [];
+    }
+
+    function setStatePatch(patch) {
+      Object.assign(state, patch);
+      render();
+    }
+
+    async function doFetch(type) {
+      setStatePatch({ loading: true, error: null });
+      try {
+        const data = await fetchSheetData(type === 'layout' ? state.layoutApi : state.detailApi);
+        if (type === 'layout') {
+          setStatePatch({ rackData: transformLayout(data), showLayoutConfig: false });
+        } else {
+          setStatePatch({ inventoryDetails: transformDetails(data), showDetailConfig: false });
+        }
+      } catch (err) {
+        setStatePatch({ error: err && err.message ? err.message : '發生錯誤' });
+      } finally {
+        setStatePatch({ loading: false });
+      }
+    }
+
+    function exportDetails() {
+      const rackId = activeRackId();
+      if (!rackId) return;
+      const items = (state.inventoryDetails[rackId] || []).filter(filterDetailItem);
+      if (items.length === 0) {
+        alert('目前無資料可匯出');
+        return;
+      }
+      const headers = ['品牌', '商品ID', 'SKU', '品名', '數量', '樓層', '合作模式'];
+      const lines = items.map(item => [item.brand, item.pid, item.sku, '"' + String(item.name).replace(/"/g, '""') + '"', item.qty, item.floor, item.mode].join(','));
+      const blob = new Blob(["\uFEFF" + headers.join(',') + '\n' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = rackId + '_' + (state.selectedFloor === 'All' ? 'Full' : state.selectedFloor + 'F') + '_Inventory.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function htmlForRackButton(id, isTop) {
+      const stats = getRackStats(id);
+      const active = activeRackId() === id;
+      const cls = (isTop ? 'h-10 ' : 'w-full h-full ') + 'flex flex-col items-center justify-center font-black border-slate-200 transition-all duration-200 hover:scale-125 hover:z-50 hover:shadow-2xl font-mono leading-none ' +
+        (isTop ? 'text-[10px] border-x border-t ' : 'text-[9px] ') +
+        (active ? 'ring-4 ring-blue-500 z-20 scale-110 shadow-2xl bg-blue-50 text-blue-600 ' : '') + getConditionColor(id);
+      return '<button data-rack-id="' + id + '" class="' + cls + '"><span>' + escapeHtml(id) + '</span>' + (stats ? '<span class="text-[8px] text-blue-600 font-bold tracking-tighter scale-90">' + escapeHtml(stats) + '</span>' : '') + '</button>';
+    }
+
+    function render() {
+      const floors = availableFloors();
+      const rackId = activeRackId();
+      const sideItems = filteredSideDetails();
+      const tests = state.testResults;
+
+      const appHtml = `
+        <div class="flex flex-col h-screen bg-slate-50 overflow-hidden font-sans text-slate-900">
+          <div class="flex items-center justify-between px-6 py-3 bg-white border-b border-slate-200 shadow-sm z-30">
+            <div class="flex items-center gap-4">
+              <div class="bg-slate-900 p-2 rounded-xl shadow-lg text-white">${icons.map()}</div>
+              <div>
+                <h1 class="text-lg font-bold tracking-tight flex items-center gap-2 text-slate-800">
+                  儲位平面管理系統
+                  <span class="text-[10px] font-mono bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded border border-emerald-200 font-bold flex items-center gap-1 w-fit mt-0.5">${icons.shield('w-3 h-3')} ${escapeHtml(APP_VERSION)}</span>
+                </h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-black opacity-60 italic">Warehouse Management System</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="relative">
+                <button id="floor-toggle" class="p-2 rounded-lg border flex items-center transition-all ${state.selectedFloor !== 'All' ? 'px-3 gap-2 bg-blue-50 border-blue-200 text-blue-700' : 'px-2 gap-1 bg-white border-slate-200 hover:bg-slate-50'}">
+                  ${icons.layers('w-4 h-4')}
+                  ${state.selectedFloor !== 'All' ? '<span class="text-xs font-black tracking-tight">' + escapeHtml(state.selectedFloor) + ' 樓</span>' : ''}
+                  ${icons.chevronDown('w-3 h-3')}
+                </button>
+                ${state.isFloorMenuOpen ? `
+                  <div id="floor-backdrop" class="fixed inset-0 z-40"></div>
+                  <div class="absolute right-0 top-full mt-2 w-32 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden py-1">
+                    <button data-floor="All" class="w-full text-left px-4 py-2 text-xs font-bold hover:bg-slate-50 flex items-center gap-2 ${state.selectedFloor === 'All' ? 'text-blue-600 bg-blue-50' : 'text-slate-600'}">${icons.grid()} 全樓層</button>
+                    <div class="h-px bg-slate-100 my-1"></div>
+                    ${floors.length > 0 ? floors.map(f => '<button data-floor="' + escapeHtml(f) + '" class="w-full text-left px-4 py-2 text-xs font-bold hover:bg-slate-50 flex items-center gap-2 ' + (state.selectedFloor === f ? 'text-blue-600 bg-blue-50' : 'text-slate-600') + '">' + icons.layers('w-3 h-3') + ' ' + escapeHtml(f) + ' 樓</button>').join('') : '<div class="px-4 py-2 text-[10px] text-slate-400 italic">無樓層資料</div>'}
+                  </div>` : ''}
+              </div>
+
+              <div class="w-px h-6 bg-slate-200 mx-1"></div>
+
+              <div class="flex items-center gap-2">
+                <div class="relative flex items-center">
+                  <span class="absolute left-2.5 text-slate-400">${icons.database('w-3.5 h-3.5')}</span>
+                  <input id="filter-pid" type="text" placeholder="商品 ID" value="${escapeHtml(state.filterPid)}" class="pl-8 pr-6 py-1.5 w-24 sm:w-32 text-xs font-bold border border-slate-200 rounded-lg focus:outline-none bg-slate-50 text-slate-700" />
+                  ${state.filterPid ? '<button id="clear-pid" class="absolute right-2 text-slate-400 hover:text-slate-700">' + icons.x('w-3 h-3') + '</button>' : ''}
+                </div>
+                <div class="relative flex items-center">
+                  <span class="absolute left-2.5 text-slate-400">${icons.tag('w-3.5 h-3.5')}</span>
+                  <input id="filter-sku" type="text" placeholder="SKU 搜尋" value="${escapeHtml(state.filterSku)}" class="pl-8 pr-6 py-1.5 w-24 sm:w-32 text-xs font-bold border border-slate-200 rounded-lg focus:outline-none bg-slate-50 text-slate-700" />
+                  ${state.filterSku ? '<button id="clear-sku" class="absolute right-2 text-slate-400 hover:text-slate-700">' + icons.x('w-3 h-3') + '</button>' : ''}
+                </div>
+              </div>
+
+              <div class="w-px h-6 bg-slate-200 mx-1"></div>
+
+              <div class="flex gap-2">
+                <button id="layout-btn" class="p-2 px-3 rounded-lg border flex items-center gap-2 transition-all ${state.showLayoutConfig ? 'bg-slate-900 text-white shadow-lg border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}">${icons.settings('w-4 h-4')}<span class="text-xs font-black tracking-tight">概況匯入</span></button>
+                <button id="detail-btn" class="p-2 px-3 rounded-lg border flex items-center gap-2 transition-all ${state.showDetailConfig ? 'bg-slate-900 text-white shadow-lg border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}">${icons.clipboard('w-4 h-4')}<span class="text-xs font-black tracking-tight">明細匯入</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-1 flex overflow-hidden relative">
+            <div class="absolute bottom-8 left-8 flex flex-col gap-1 bg-white p-1.5 rounded-2xl shadow-xl border border-slate-200 z-40">
+              <button id="zoom-in" class="p-3 hover:bg-slate-50 hover:text-blue-600 rounded-xl text-slate-500">${icons.zoomIn()}</button>
+              <div class="h-px bg-slate-100 mx-2"></div>
+              <button id="zoom-reset" class="p-2 hover:bg-slate-50 rounded-xl text-slate-600"><span class="text-[10px] font-black font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-500">${Math.round(state.viewScale * 100)}%</span></button>
+              <div class="h-px bg-slate-100 mx-2"></div>
+              <button id="zoom-out" class="p-3 hover:bg-slate-50 hover:text-blue-600 rounded-xl text-slate-500">${icons.zoomOut()}</button>
+            </div>
+
+            <div class="flex-1 overflow-auto p-12 bg-slate-100 flex justify-center items-start">
+              <div style="transform: scale(${state.viewScale});" class="inline-block bg-white p-12 rounded-2xl shadow-2xl border border-slate-200 relative origin-top select-none min-w-max transition-transform duration-300 ease-out">
+                <div class="absolute top-3 right-12 flex items-center gap-4 bg-white px-4 py-2 rounded-xl border border-slate-100 shadow-sm z-10">
+                  <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-emerald-600 shadow-sm"></div><span class="text-[10px] font-bold text-slate-600">買斷</span></div>
+                  <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-gray-200 border border-gray-300"></div><span class="text-[10px] font-bold text-slate-600">寄售</span></div>
+                  <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-yellow-300 border border-yellow-400"></div><span class="text-[10px] font-bold text-slate-600">混合模式</span></div>
+                  <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-white border border-slate-200"></div><span class="text-[10px] font-bold text-slate-400">空儲位</span></div>
+                </div>
+
+                <div class="grid grid-cols-[50px_repeat(16,minmax(50px,1fr))] mb-2">
+                  <div class="h-10 flex items-center justify-center font-black text-xs bg-slate-800 text-white rounded-tl-lg">ID</div>
+                  <div class="col-span-4"></div>
+                  ${topRackIds.map(fc => fc ? htmlForRackButton(fc, true) : '<div class="h-10"></div>').join('')}
+                </div>
+
+                <div class="grid grid-cols-[50px_repeat(16,minmax(50px,1fr))] border-t border-l border-slate-200">
+                  ${rows.map(rowNum => {
+                    const rowCells = colGroups.map(group => {
+                      const id = group.id + String(rowNum).padStart(2, '0');
+                      return '<div class="h-8 border-r border-b border-slate-200 ' + (group.gap ? 'bg-slate-100/50' : '') + '">' + (!group.gap ? htmlForRackButton(id, false) : '') + '</div>';
+                    }).join('');
+                    return '<div class="contents"><div class="h-8 border-r border-b border-slate-200 bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400">' + rowNum + '</div>' + rowCells + '</div>';
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+
+            ${rackId ? '<div id="overlay-close" class="absolute inset-0 bg-slate-900/20 backdrop-blur-[1px] z-40"></div>' : ''}
+
+            <div class="transition-all duration-700 ease-in-out bg-white border-l border-slate-200 shadow-2xl z-50 flex flex-col absolute right-0 top-0 bottom-0 ${rackId ? 'w-[480px] opacity-100' : 'w-0 opacity-0 translate-x-full overflow-hidden'}">
+              ${rackId ? `
+                <div class="py-4 px-8 bg-slate-900 text-white flex justify-between items-center shadow-lg">
+                  <div>
+                    <div class="flex items-center gap-3">
+                      <h3 class="text-3xl font-black tracking-tighter">${escapeHtml(rackId)}</h3>
+                      ${getRackStats(rackId) ? '<span class="text-lg text-blue-400 font-mono bg-white/10 px-2 py-0.5 rounded-lg border border-white/10 shadow-inner">' + escapeHtml(getRackStats(rackId)) + '</span>' : ''}
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                      <p class="text-[9px] text-blue-400 uppercase font-black tracking-widest font-mono">Inventory Details</p>
+                      ${state.selectedFloor !== 'All' ? '<span class="text-[9px] bg-blue-500 text-white px-1.5 py-0.5 rounded font-bold">' + escapeHtml(state.selectedFloor) + ' 樓</span>' : ''}
+                    </div>
+                  </div>
+                  <button id="close-side" class="p-2 hover:bg-white/10 rounded-full">${icons.x('w-5 h-5')}</button>
+                </div>
+                <div class="p-8 flex-1 overflow-y-auto bg-white space-y-8">
+                  <section>
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center justify-between border-b pb-2">
+                      <div class="flex items-center gap-2">${icons.info('w-4 h-4 text-blue-500')}<span>${state.selectedFloor === 'All' ? '庫存明細清單' : escapeHtml(state.selectedFloor) + ' 樓庫存清單'} (${sideItems.length} 項)</span></div>
+                      <button id="export-btn" class="flex items-center gap-1 hover:text-blue-600 transition-colors group">${icons.download('w-3 h-3')}<span class="hidden sm:inline">匯出</span></button>
+                    </h4>
+                    <div class="space-y-4">
+                      ${sideItems.map(item => '<div class="p-5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all relative overflow-hidden border-l-4 border-l-blue-500 hover:border-l-indigo-500"><div class="flex justify-between items-start mb-3"><span class="text-[10px] bg-slate-900 text-white px-2 py-0.5 rounded font-black uppercase tracking-tighter">' + escapeHtml(item.brand) + '</span><span class="text-[10px] px-2 py-0.5 rounded font-black border shadow-sm ' + (String(item.mode).includes('買斷') ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100') + '">' + escapeHtml(item.mode) + '</span></div><h5 class="text-sm font-black text-slate-800 leading-tight mb-4 tracking-tight">' + escapeHtml(item.name) + '</h5><div class="grid grid-cols-2 gap-y-3 text-[10px] font-bold"><div class="flex items-center gap-1.5 text-slate-400">' + icons.tag('w-3 h-3 opacity-60') + ' SKU: ' + escapeHtml(item.sku) + '</div><div class="flex items-center gap-1.5 text-blue-600">' + icons.box('w-3 h-3') + ' 數量: ' + escapeHtml(item.qty) + '</div><div class="flex items-center gap-1.5 text-slate-400 font-mono">' + icons.layers('w-3 h-3 opacity-60') + ' 樓層: ' + escapeHtml(item.floor) + '</div><div class="flex items-center gap-1.5 text-slate-400 font-mono">' + icons.database('w-3 h-3 opacity-60') + ' ID: ' + escapeHtml(item.pid) + '</div></div></div>').join('')}
+                      ${sideItems.length === 0 ? '<div class="text-center py-16 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">' + icons.alert('w-12 h-12 mx-auto mb-4 text-slate-200') + '<p class="text-slate-400 text-sm font-black tracking-tight">' + escapeHtml((state.filterPid || state.filterSku) ? '沒有符合此搜尋條件的商品明細' : (state.selectedFloor === 'All' ? '目前無此儲位的詳細明細' : '此儲位在 ' + state.selectedFloor + ' 樓無庫存')) + '</p><p class="text-slate-300 text-[10px] mt-2 font-bold italic">請確認資料匯入狀況或變更篩選條件</p></div>' : ''}
+                    </div>
+                  </section>
+                </div>` : ''}
+            </div>
+          </div>
+
+          <div class="px-6 py-2 bg-slate-100 border-t border-slate-200 text-[11px] text-slate-500 flex gap-4 flex-wrap">
+            ${tests.map(t => '<span class="' + (t.pass ? 'text-emerald-700 font-bold' : 'text-red-600 font-bold') + '">' + (t.pass ? 'PASS' : 'FAIL') + ' · ' + escapeHtml(t.name) + '</span>').join('')}
+          </div>
+
+          ${state.showLayoutConfig ? `
+            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center p-6">
+              <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-10 border border-white/20">
+                <div class="flex justify-between items-center mb-8 border-b pb-4">
+                  <div class="flex items-center gap-3"><div class="bg-slate-900 p-2 rounded-lg text-white shadow-lg">${icons.settings('w-5 h-5')}</div><h2 class="text-2xl font-black text-slate-800 tracking-tighter">平面儲座概況匯入</h2></div>
+                  <button id="close-layout-modal" class="text-slate-400 hover:text-slate-800">${icons.x('w-5 h-5')}</button>
+                </div>
+                <div class="space-y-6">
+                  <div class="p-5 bg-blue-50 border border-blue-100 rounded-2xl shadow-inner"><p class="text-[11px] text-blue-700 font-bold leading-relaxed">系統將自動映射：<span class="bg-white px-1 shadow-sm">儲座</span>、<span class="bg-white px-1 shadow-sm">庫存數</span>、<span class="bg-white px-1 shadow-sm">層級</span>、<span class="bg-white px-1 shadow-sm">合作模式</span>、<span class="bg-white px-1 shadow-sm text-blue-600">slot_code (樓層)</span>。</p></div>
+                  <div class="space-y-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">試算表網址 (Google Sheets)</label><input id="layout-api" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none font-medium text-sm" value="${escapeHtml(state.layoutApi)}" /></div>
+                  <button id="fetch-layout" class="w-full py-4 bg-slate-900 hover:bg-black text-white rounded-2xl font-black flex items-center justify-center gap-3 transition-all shadow-xl">${state.loading ? icons.refresh('w-5 h-5 animate-spin') : icons.refresh('w-5 h-5')} 同步最新的儲座概況</button>
+                  ${state.error ? '<div class="p-4 text-red-600 text-[11px] font-bold bg-red-50 border border-red-100 rounded-xl flex items-center gap-2">' + icons.alert('w-4 h-4') + ' ' + escapeHtml(state.error) + '</div>' : ''}
+                </div>
+              </div>
+            </div>` : ''}
+
+          ${state.showDetailConfig ? `
+            <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center p-6">
+              <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-10 border border-blue-100/50">
+                <div class="flex justify-between items-center mb-8 border-b pb-4">
+                  <div class="flex items-center gap-3"><div class="bg-blue-600 p-2 rounded-lg text-white shadow-lg shadow-blue-200">${icons.clipboard('w-5 h-5')}</div><h2 class="text-2xl font-black text-slate-800 tracking-tighter">庫存明細資料匯入</h2></div>
+                  <button id="close-detail-modal" class="text-slate-400 hover:text-slate-800">${icons.x('w-5 h-5')}</button>
+                </div>
+                <div class="space-y-6">
+                  <div class="p-5 bg-blue-50 border border-blue-100 rounded-2xl shadow-inner"><p class="text-[11px] text-blue-700 font-bold leading-relaxed">系統將自動映射：<span class="bg-white px-1 shadow-sm">品牌</span>、<span class="bg-white px-1 shadow-sm">商品id</span>、<span class="bg-white px-1 shadow-sm">sku</span>、<span class="bg-white px-1 shadow-sm">品名</span>、<span class="bg-white px-1 shadow-sm">庫存數</span>、<span class="bg-white px-1 shadow-sm">儲座</span>、<span class="bg-white px-1 shadow-sm">樓層</span>、<span class="bg-white px-1 shadow-sm">合作模式</span>。</p></div>
+                  <div class="space-y-2"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">庫存清單試算表網址</label><input id="detail-api" class="w-full px-5 py-4 bg-slate-50 border border-blue-200 rounded-2xl outline-none font-medium text-sm" value="${escapeHtml(state.detailApi)}" /></div>
+                  <button id="fetch-detail" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-100">${state.loading ? icons.refresh('w-5 h-5 animate-spin') : icons.refresh('w-5 h-5')} 同步最新的庫存明細資料</button>
+                  ${state.error ? '<div class="p-4 text-red-600 text-[11px] font-bold bg-red-50 border border-red-100 rounded-xl flex items-center gap-2">' + icons.alert('w-4 h-4') + ' ' + escapeHtml(state.error) + '</div>' : ''}
+                </div>
+              </div>
+            </div>` : ''}
+        </div>`;
+
+      const app = document.getElementById('app');
+      app.innerHTML = appHtml;
+      bindEvents();
+    }
+
+    function bindEvents() {
+      const byId = (id) => document.getElementById(id);
+      const on = (el, event, fn) => { if (el) el.addEventListener(event, fn); };
+      on(byId('floor-toggle'), 'click', () => setStatePatch({ isFloorMenuOpen: !state.isFloorMenuOpen }));
+      on(byId('floor-backdrop'), 'click', () => setStatePatch({ isFloorMenuOpen: false }));
+      document.querySelectorAll('[data-floor]').forEach(btn => btn.addEventListener('click', () => setStatePatch({ selectedFloor: btn.getAttribute('data-floor'), isFloorMenuOpen: false })));
+      on(byId('layout-btn'), 'click', () => setStatePatch({ showLayoutConfig: !state.showLayoutConfig, showDetailConfig: false }));
+      on(byId('detail-btn'), 'click', () => setStatePatch({ showDetailConfig: !state.showDetailConfig, showLayoutConfig: false }));
+      on(byId('close-layout-modal'), 'click', () => setStatePatch({ showLayoutConfig: false }));
+      on(byId('close-detail-modal'), 'click', () => setStatePatch({ showDetailConfig: false }));
+      on(byId('zoom-in'), 'click', () => setStatePatch({ viewScale: Math.min(state.viewScale + 0.1, 2) }));
+      on(byId('zoom-out'), 'click', () => setStatePatch({ viewScale: Math.max(state.viewScale - 0.1, 0.4) }));
+      on(byId('zoom-reset'), 'click', () => setStatePatch({ viewScale: 0.9 }));
+      on(byId('filter-pid'), 'input', (e) => setStatePatch({ filterPid: e.target.value }));
+      on(byId('filter-sku'), 'input', (e) => setStatePatch({ filterSku: e.target.value }));
+      on(byId('clear-pid'), 'click', () => setStatePatch({ filterPid: '' }));
+      on(byId('clear-sku'), 'click', () => setStatePatch({ filterSku: '' }));
+      on(byId('layout-api'), 'input', (e) => { state.layoutApi = e.target.value; });
+      on(byId('detail-api'), 'input', (e) => { state.detailApi = e.target.value; });
+      on(byId('fetch-layout'), 'click', () => doFetch('layout'));
+      on(byId('fetch-detail'), 'click', () => doFetch('detail'));
+      on(byId('overlay-close'), 'click', () => setStatePatch({ activeRack: null }));
+      on(byId('close-side'), 'click', () => setStatePatch({ activeRack: null }));
+      on(byId('export-btn'), 'click', exportDetails);
+      document.querySelectorAll('[data-rack-id]').forEach(btn => btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-rack-id');
+        setStatePatch({ activeRack: { col: id.slice(0, 2), row: Number(id.slice(2)) } });
+      }));
+    }
+
+    try {
+      state.testResults = runSmokeTests();
+      render();
+    } catch (error) {
+      document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center p-8"><div class="max-w-xl w-full bg-white border border-red-200 rounded-2xl shadow-xl p-8"><div class="flex items-center gap-3 text-red-600 mb-4">' + icons.alert('w-6 h-6') + '<h1 class="text-xl font-black">初始化失敗</h1></div><pre class="text-xs bg-slate-100 rounded-xl p-4 overflow-auto text-slate-700">' + escapeHtml(error && error.stack ? error.stack : String(error)) + '</pre></div></div>';
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

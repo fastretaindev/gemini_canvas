@@ -1,554 +1,557 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #b76ff7; -webkit-text-stroke: #b76ff7}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #36c0a0; -webkit-text-stroke: #36c0a0}
-    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #71c083; -webkit-text-stroke: #71c083}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca; min-height: 16.0px}
-    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #6d7378; -webkit-text-stroke: #6d7378}
-    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #d4d4d4; -webkit-text-stroke: #d4d4d4}
-    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #a34f83; -webkit-text-stroke: #a34f83}
-    span.s1 {font-kerning: none; color: #b76ff7; background-color: #171818; -webkit-text-stroke: 0px #b76ff7}
-    span.s2 {font-kerning: none; background-color: #171818}
-    span.s3 {font-kerning: none; color: #36c0a0; background-color: #171818; -webkit-text-stroke: 0px #36c0a0}
-    span.s4 {font-kerning: none; color: #d4d4d4; background-color: #171818; -webkit-text-stroke: 0px #d4d4d4}
-    span.s5 {font-kerning: none; color: #71c083; background-color: #171818; -webkit-text-stroke: 0px #71c083}
-    span.s6 {font-kerning: none; color: #cacaca; background-color: #171818; -webkit-text-stroke: 0px #cacaca}
-    span.s7 {font-kerning: none}
-    span.s8 {font-kerning: none; color: #a34f83; background-color: #171818; -webkit-text-stroke: 0px #a34f83}
-    span.s9 {font-kerning: none; color: #6d7378; background-color: #171818; -webkit-text-stroke: 0px #6d7378}
-    span.s10 {font-kerning: none; color: #f67c30; background-color: #171818; -webkit-text-stroke: 0px #f67c30}
-    span.s11 {font-kerning: none; color: #ee2e38; background-color: #171818; -webkit-text-stroke: 0px #ee2e38}
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>財務發票解析系統</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18",
+        "react-dom/client": "https://esm.sh/react-dom@18/client",
+        "lucide-react": "https://esm.sh/lucide-react"
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body>
-<p class="p1"><span class="s1">import</span><span class="s2"> </span><span class="s3">React</span><span class="s4">,</span><span class="s2"> </span><span class="s4">{</span><span class="s2"> useState</span><span class="s4">,</span><span class="s2"> useEffect</span><span class="s4">,</span><span class="s2"> useMemo </span><span class="s4">}</span><span class="s2"> </span><span class="s1">from</span><span class="s2"> </span><span class="s5">'react'</span><span class="s4">;</span></p>
-<p class="p2"><span class="s2">import</span><span class="s6"> </span><span class="s4">{</span><span class="s6"><span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">Upload</span><span class="s4">,</span><span class="s6"> </span><span class="s2">FileText</span><span class="s4">,</span><span class="s6"> </span><span class="s2">Loader2</span><span class="s4">,</span><span class="s6"> </span><span class="s2">Trash2</span><span class="s4">,</span><span class="s6"> </span><span class="s2">Download</span><span class="s4">,</span><span class="s6"> </span><span class="s2">List</span><span class="s4">,</span><span class="s6"><span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">FileSpreadsheet</span><span class="s4">,</span><span class="s6"> </span><span class="s2">AlertCircle</span><span class="s4">,</span><span class="s6"> </span><span class="s2">ChevronDown</span><span class="s4">,</span><span class="s6"><span class="Apple-converted-space"> </span></span></p>
-<p class="p3"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">ChevronUp</span><span class="s4">,</span><span class="s6"> </span><span class="s2">ShieldCheck</span><span class="s4">,</span><span class="s6"> </span><span class="s2">TrendingUp</span><span class="s4">,</span><span class="s6"> </span><span class="s2">PieChart</span></p>
-<p class="p4"><span class="s4">}</span><span class="s6"> </span><span class="s1">from</span><span class="s6"> </span><span class="s2">'lucide-react'</span><span class="s4">;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// --- Configuration ---</span></p>
-<p class="p4"><span class="s1">const</span><span class="s6"> </span><span class="s3">PDFJS_CDN</span><span class="s6"> </span><span class="s4">=</span><span class="s6"> </span><span class="s2">'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'</span><span class="s4">;</span></p>
-<p class="p4"><span class="s1">const</span><span class="s6"> </span><span class="s3">PDFJS_WORKER_CDN</span><span class="s6"> </span><span class="s4">=</span><span class="s6"> </span><span class="s2">'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'</span><span class="s4">;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// --- Logic: Data Sanitization ---</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// 數值清洗：處理 7.253.00 (點號千分位) 與標準格式</span></p>
-<p class="p1"><span class="s1">function</span><span class="s2"> toNumber</span><span class="s4">(</span><span class="s2">v</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p2"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">if</span><span class="s6"> </span><span class="s4">(!</span><span class="s6">v</span><span class="s4">)</span><span class="s6"> </span><span class="s2">return</span><span class="s6"> </span><span class="s2">null</span><span class="s4">;</span></p>
-<p class="p2"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">if</span><span class="s6"> </span><span class="s4">(</span><span class="s2">typeof</span><span class="s6"> v </span><span class="s4">===</span><span class="s6"> </span><span class="s5">'number'</span><span class="s4">)</span><span class="s6"> </span><span class="s2">return</span><span class="s6"> v</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">let</span><span class="s2"> s </span><span class="s4">=</span><span class="s2"> v</span><span class="s4">.</span><span class="s2">trim</span><span class="s4">();</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span>s </span><span class="s4">=</span><span class="s2"> s</span><span class="s4">.</span><span class="s2">replace</span><span class="s4">(</span><span class="s8">/[$,]/</span><span class="s1">g</span><span class="s4">,</span><span class="s2"> </span><span class="s5">""</span><span class="s4">);</span><span class="s2"> </span><span class="s9">// 移除 $ 與 ,</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">  </span></span></p>
-<p class="p6"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">// 若有多個點，假設最後一個是小數點，其餘是千分位</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">((</span><span class="s2">s</span><span class="s4">.</span><span class="s2">match</span><span class="s4">(</span><span class="s8">/\./</span><span class="s1">g</span><span class="s4">)</span><span class="s2"> </span><span class="s4">||</span><span class="s2"> </span><span class="s4">[]).</span><span class="s2">length </span><span class="s4">&gt;</span><span class="s2"> </span><span class="s10">1</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>s </span><span class="s4">=</span><span class="s2"> s</span><span class="s4">.</span><span class="s2">replace</span><span class="s4">(</span><span class="s8">/\.(?=.*\.)/</span><span class="s1">g</span><span class="s4">,</span><span class="s2"> </span><span class="s5">""</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">}</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">  </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> n </span><span class="s4">=</span><span class="s2"> </span><span class="s3">Number</span><span class="s4">(</span><span class="s2">s</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">return</span><span class="s2"> </span><span class="s3">Number</span><span class="s4">.</span><span class="s2">isFinite</span><span class="s4">(</span><span class="s2">n</span><span class="s4">)</span><span class="s2"> </span><span class="s4">?</span><span class="s2"> n </span><span class="s4">:</span><span class="s2"> </span><span class="s1">null</span><span class="s4">;</span></p>
-<p class="p7"><span class="s2">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// 座標行重組：核心邏輯</span></p>
-<p class="p1"><span class="s1">function</span><span class="s2"> groupTextItemsToLines</span><span class="s4">(</span><span class="s2">items</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> linesMap </span><span class="s4">=</span><span class="s2"> </span><span class="s1">new</span><span class="s2"> </span><span class="s3">Map</span><span class="s4">();</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> lineTolerance </span><span class="s4">=</span><span class="s2"> </span><span class="s10">4</span><span class="s4">;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">for</span><span class="s2"> </span><span class="s4">(</span><span class="s1">const</span><span class="s2"> item </span><span class="s1">of</span><span class="s2"> items</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> transform </span><span class="s4">=</span><span class="s2"> item</span><span class="s4">.</span><span class="s2">transform</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> y </span><span class="s4">=</span><span class="s2"> transform</span><span class="s4">[</span><span class="s10">5</span><span class="s4">];</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> x </span><span class="s4">=</span><span class="s2"> transform</span><span class="s4">[</span><span class="s10">4</span><span class="s4">];</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> text </span><span class="s4">=</span><span class="s2"> item</span><span class="s4">.</span><span class="s2">str </span><span class="s4">||</span><span class="s2"> </span><span class="s5">""</span><span class="s4">;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">let</span><span class="s2"> key </span><span class="s4">=</span><span class="s2"> </span><span class="s4">[...</span><span class="s2">linesMap</span><span class="s4">.</span><span class="s2">keys</span><span class="s4">()].</span><span class="s2">find</span><span class="s4">(</span><span class="s2">k </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s3">Math</span><span class="s4">.</span><span class="s2">abs</span><span class="s4">(</span><span class="s2">k </span><span class="s4">-</span><span class="s2"> y</span><span class="s4">)</span><span class="s2"> </span><span class="s4">&lt;=</span><span class="s2"> lineTolerance</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">key </span><span class="s4">===</span><span class="s2"> </span><span class="s1">undefined</span><span class="s4">)</span><span class="s2"> key </span><span class="s4">=</span><span class="s2"> y</span><span class="s4">;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> arr </span><span class="s4">=</span><span class="s2"> linesMap</span><span class="s4">.</span><span class="s1">get</span><span class="s4">(</span><span class="s2">key</span><span class="s4">)</span><span class="s2"> </span><span class="s4">||</span><span class="s2"> </span><span class="s4">[];</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>arr</span><span class="s4">.</span><span class="s2">push</span><span class="s4">({</span><span class="s2"> x</span><span class="s4">,</span><span class="s2"> text </span><span class="s4">});</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>linesMap</span><span class="s4">.</span><span class="s1">set</span><span class="s4">(</span><span class="s2">key</span><span class="s4">,</span><span class="s2"> arr</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">return</span><span class="s2"> </span><span class="s3">Array</span><span class="s4">.</span><span class="s1">from</span><span class="s4">(</span><span class="s2">linesMap</span><span class="s4">.</span><span class="s2">entries</span><span class="s4">())</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">.</span><span class="s2">sort</span><span class="s4">((</span><span class="s2">a</span><span class="s4">,</span><span class="s2"> b</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> b</span><span class="s4">[</span><span class="s10">0</span><span class="s4">]</span><span class="s2"> </span><span class="s4">-</span><span class="s2"> a</span><span class="s4">[</span><span class="s10">0</span><span class="s4">])</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">.</span><span class="s2">map</span><span class="s4">(([</span><span class="s2">_</span><span class="s4">,</span><span class="s2"> arr</span><span class="s4">])</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">return</span><span class="s2"> arr</span><span class="s4">.</span><span class="s2">sort</span><span class="s4">((</span><span class="s2">a</span><span class="s4">,</span><span class="s2"> b</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> a</span><span class="s4">.</span><span class="s2">x </span><span class="s4">-</span><span class="s2"> b</span><span class="s4">.</span><span class="s2">x</span><span class="s4">).</span><span class="s2">map</span><span class="s4">(</span><span class="s2">t </span><span class="s4">=&gt;</span><span class="s2"> t</span><span class="s4">.</span><span class="s2">text</span><span class="s4">).</span><span class="s2">join</span><span class="s4">(</span><span class="s5">" "</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">});</span></p>
-<p class="p7"><span class="s2">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// --- Logic: Advanced Parsers ---</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// 金額抓取：支援寬字距標籤 (e.g. 銷 售 額) 與各式數值</span></p>
-<p class="p1"><span class="s1">function</span><span class="s2"> pickAmount</span><span class="s4">(</span><span class="s2">text</span><span class="s4">,</span><span class="s2"> labelPattern</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> re </span><span class="s4">=</span><span class="s2"> </span><span class="s1">new</span><span class="s2"> </span><span class="s3">RegExp</span><span class="s4">(</span><span class="s5">`</span><span class="s4">${</span><span class="s2">labelPattern</span><span class="s4">}</span><span class="s5">\\D*?([\\d,.]+)`</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> m </span><span class="s4">=</span><span class="s2"> text</span><span class="s4">.</span><span class="s2">match</span><span class="s4">(</span><span class="s2">re</span><span class="s4">)?.[</span><span class="s10">1</span><span class="s4">]</span><span class="s2"> </span><span class="s4">??</span><span class="s2"> </span><span class="s1">null</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">return</span><span class="s2"> m </span><span class="s4">?</span><span class="s2"> toNumber</span><span class="s4">(</span><span class="s2">m</span><span class="s4">)</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s1">null</span><span class="s4">;</span></p>
-<p class="p7"><span class="s2">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// 賣方區塊鎖定：避免抓到買方資料</span></p>
-<p class="p1"><span class="s1">function</span><span class="s2"> pickSellerBlock</span><span class="s4">(</span><span class="s2">text</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s6"> m </span><span class="s4">=</span><span class="s6"> text</span><span class="s4">.</span><span class="s6">match</span><span class="s4">(</span><span class="s2">/(?:營\s*業\s*人|賣\s*方)\s*[:：][\s\S]{0,300}/</span><span class="s4">);</span></p>
-<p class="p7"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">return</span><span class="s6"> m</span><span class="s2">?.[</span><span class="s10">0</span><span class="s2">]</span><span class="s6"> </span><span class="s2">??</span><span class="s6"> </span><span class="s5">""</span><span class="s2">;</span></p>
-<p class="p7"><span class="s2">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s1">function</span><span class="s2"> parseSeller</span><span class="s4">(</span><span class="s2">text</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> block </span><span class="s4">=</span><span class="s2"> pickSellerBlock</span><span class="s4">(</span><span class="s2">text</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">let</span><span class="s2"> seller_name </span><span class="s4">=</span><span class="s2"> block</span><span class="s4">.</span><span class="s2">match</span><span class="s4">(</span><span class="s8">/[:：]\s*([^\n]+)/</span><span class="s4">)?.[</span><span class="s10">1</span><span class="s4">]?.</span><span class="s2">trim</span><span class="s4">()</span><span class="s2"> </span><span class="s4">||</span><span class="s2"> </span><span class="s1">null</span><span class="s4">;</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s6"> seller_tax_id </span><span class="s4">=</span><span class="s6"> block</span><span class="s4">.</span><span class="s6">match</span><span class="s4">(</span><span class="s2">/統\s*一\s*編\s*號\s*[:：.]?\s*(\d{8})/</span><span class="s4">)?.[</span><span class="s10">1</span><span class="s4">]</span><span class="s6"> </span><span class="s4">||</span><span class="s6"> </span><span class="s1">null</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">return</span><span class="s2"> </span><span class="s4">{</span><span class="s2"> seller_name</span><span class="s4">,</span><span class="s2"> seller_tax_id </span><span class="s4">};</span></p>
-<p class="p7"><span class="s2">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// 稅別判定：支援跨行與分散關鍵字，新增 √ 符號支援</span></p>
-<p class="p1"><span class="s1">function</span><span class="s2"> pickTaxType</span><span class="s4">(</span><span class="s2">text</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> taxBlock </span><span class="s4">=</span><span class="s2"> text</span><span class="s4">.</span><span class="s2">match</span><span class="s4">(</span><span class="s8">/營\s*業\s*稅[\s\S]{0,150}/</span><span class="s4">)?.[</span><span class="s10">0</span><span class="s4">]</span><span class="s2"> </span><span class="s4">??</span><span class="s2"> text</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">let</span><span class="s2"> taxable </span><span class="s4">=</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span><span class="s2"> zero </span><span class="s4">=</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span><span class="s2"> exempt </span><span class="s4">=</span><span class="s2"> </span><span class="s5">""</span><span class="s4">;</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">  </span></span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">if</span><span class="s6"> </span><span class="s4">(</span><span class="s2">/應\s*稅\s*[:：]?\s*[VvXx✓√]/</span><span class="s4">.</span><span class="s6">test</span><span class="s4">(</span><span class="s6">taxBlock</span><span class="s4">))</span><span class="s6"> taxable </span><span class="s4">=</span><span class="s6"> </span><span class="s5">"V"</span><span class="s4">;</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">if</span><span class="s6"> </span><span class="s4">(</span><span class="s2">/零\s*稅\s*率\s*[:：]?\s*[VvXx✓√]/</span><span class="s4">.</span><span class="s6">test</span><span class="s4">(</span><span class="s6">taxBlock</span><span class="s4">))</span><span class="s6"> zero </span><span class="s4">=</span><span class="s6"> </span><span class="s5">"V"</span><span class="s4">;</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">if</span><span class="s6"> </span><span class="s4">(</span><span class="s2">/免\s*稅\s*[:：]?\s*[VvXx✓√]/</span><span class="s4">.</span><span class="s6">test</span><span class="s4">(</span><span class="s6">taxBlock</span><span class="s4">))</span><span class="s6"> exempt </span><span class="s4">=</span><span class="s6"> </span><span class="s5">"V"</span><span class="s4">;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(!</span><span class="s2">taxable </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">!</span><span class="s2">zero </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">!</span><span class="s2">exempt</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">     </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s8">/應\s*稅/</span><span class="s4">.</span><span class="s2">test</span><span class="s4">(</span><span class="s2">text</span><span class="s4">)</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">!</span><span class="s8">/零\s*稅/</span><span class="s4">.</span><span class="s2">test</span><span class="s4">(</span><span class="s2">text</span><span class="s4">)</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">!</span><span class="s8">/免\s*稅/</span><span class="s4">.</span><span class="s2">test</span><span class="s4">(</span><span class="s2">text</span><span class="s4">))</span><span class="s2"> taxable </span><span class="s4">=</span><span class="s2"> </span><span class="s5">"V"</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">return</span><span class="s2"> taxable </span><span class="s4">?</span><span class="s2"> </span><span class="s5">"V"</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s4">(</span><span class="s2">zero </span><span class="s4">?</span><span class="s2"> </span><span class="s5">"Zero"</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s4">(</span><span class="s2">exempt </span><span class="s4">?</span><span class="s2"> </span><span class="s5">"Exempt"</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">));</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p7"><span class="s2">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// --- Logic: Mode 1 - Header ---</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s1">function</span><span class="s2"> parseInvoiceHeader</span><span class="s4">(</span><span class="s2">lines</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> fullText </span><span class="s4">=</span><span class="s2"> lines</span><span class="s4">.</span><span class="s2">join</span><span class="s4">(</span><span class="s5">"\n"</span><span class="s4">);</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s6"> mInv </span><span class="s4">=</span><span class="s6"> fullText</span><span class="s4">.</span><span class="s6">match</span><span class="s4">(</span><span class="s2">/(?:發\s*票\s*號\s*碼|號\s*碼)[：:.]?\s*([A-Z]{2}[- ]?\d{8})/</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> invoiceNumber </span><span class="s4">=</span><span class="s2"> mInv </span><span class="s4">?</span><span class="s2"> mInv</span><span class="s4">[</span><span class="s10">1</span><span class="s4">].</span><span class="s2">replace</span><span class="s4">(</span><span class="s8">/[- ]/</span><span class="s1">g</span><span class="s4">,</span><span class="s2"> </span><span class="s5">''</span><span class="s4">)</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">;</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s6"> mFormat </span><span class="s4">=</span><span class="s6"> fullText</span><span class="s4">.</span><span class="s6">match</span><span class="s4">(</span><span class="s2">/(?:格\s*式)[：:.]?\s*(\d{2})/</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> format </span><span class="s4">=</span><span class="s2"> mFormat </span><span class="s4">?</span><span class="s2"> mFormat</span><span class="s4">[</span><span class="s10">1</span><span class="s4">]</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">;</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s6"> mDate </span><span class="s4">=</span><span class="s6"> fullText</span><span class="s4">.</span><span class="s6">match</span><span class="s4">(</span><span class="s2">/(\d{4}[-/]\d{2}[-/]\d{2})/</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> date </span><span class="s4">=</span><span class="s2"> mDate </span><span class="s4">?</span><span class="s2"> mDate</span><span class="s4">[</span><span class="s10">1</span><span class="s4">]</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> </span><span class="s4">{</span><span class="s2"> seller_name</span><span class="s4">,</span><span class="s2"> seller_tax_id </span><span class="s4">}</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> parseSeller</span><span class="s4">(</span><span class="s2">fullText</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> taxStatus </span><span class="s4">=</span><span class="s2"> pickTaxType</span><span class="s4">(</span><span class="s2">fullText</span><span class="s4">);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p2"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">return</span><span class="s6"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>invoiceNumber</span><span class="s4">,</span><span class="s2"> format</span><span class="s4">,</span><span class="s2"> date</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>salesTotal</span><span class="s4">:</span><span class="s2"> pickAmount</span><span class="s4">(</span><span class="s2">fullText</span><span class="s4">,</span><span class="s2"> </span><span class="s5">"銷\\s*售\\s*額\\s*合\\s*計"</span><span class="s4">)?.</span><span class="s2">toString</span><span class="s4">(),</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>taxAmount</span><span class="s4">:</span><span class="s2"> pickAmount</span><span class="s4">(</span><span class="s2">fullText</span><span class="s4">,</span><span class="s2"> </span><span class="s5">"(?:營\\s*業\\s*稅\\s*額|營\\s*業\\s*稅|稅\\s*額)"</span><span class="s4">)?.</span><span class="s2">toString</span><span class="s4">(),</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>grandTotal</span><span class="s4">:</span><span class="s2"> pickAmount</span><span class="s4">(</span><span class="s2">fullText</span><span class="s4">,</span><span class="s2"> </span><span class="s5">"總\\s*計"</span><span class="s4">)?.</span><span class="s2">toString</span><span class="s4">(),</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>sellerId</span><span class="s4">:</span><span class="s2"> seller_tax_id </span><span class="s4">||</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>sellerName</span><span class="s4">:</span><span class="s2"> seller_name </span><span class="s4">||</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>taxTypeTaxable</span><span class="s4">:</span><span class="s2"> taxStatus </span><span class="s4">===</span><span class="s2"> </span><span class="s5">"V"</span><span class="s2"> </span><span class="s4">?</span><span class="s2"> </span><span class="s5">"V"</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>taxTypeZero</span><span class="s4">:</span><span class="s2"> taxStatus </span><span class="s4">===</span><span class="s2"> </span><span class="s5">"Zero"</span><span class="s2"> </span><span class="s4">?</span><span class="s2"> </span><span class="s5">"V"</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>taxTypeExempt</span><span class="s4">:</span><span class="s2"> taxStatus </span><span class="s4">===</span><span class="s2"> </span><span class="s5">"Exempt"</span><span class="s2"> </span><span class="s4">?</span><span class="s2"> </span><span class="s5">"V"</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">};</span></p>
-<p class="p7"><span class="s2">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// --- Logic: Mode 2 - Details ---</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s1">function</span><span class="s2"> parseItemRow</span><span class="s4">(</span><span class="s2">line</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> normalized </span><span class="s4">=</span><span class="s2"> line</span><span class="s4">.</span><span class="s2">replace</span><span class="s4">(</span><span class="s8">/\s+/</span><span class="s1">g</span><span class="s4">,</span><span class="s2"> </span><span class="s5">" "</span><span class="s4">).</span><span class="s2">trim</span><span class="s4">();</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s6"> regexp </span><span class="s4">=</span><span class="s6"> </span><span class="s2">/^(.+)\s+([-]?[\d,.]+)\s+([-]?[$]?[\d,.]+)\s+([-]?[$]?[\d,.]+)(?:\s+(.*))?$/</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> m </span><span class="s4">=</span><span class="s2"> normalized</span><span class="s4">.</span><span class="s2">match</span><span class="s4">(</span><span class="s2">regexp</span><span class="s4">);</span></p>
-<p class="p2"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">if</span><span class="s6"> </span><span class="s4">(!</span><span class="s6">m</span><span class="s4">)</span><span class="s6"> </span><span class="s2">return</span><span class="s6"> </span><span class="s2">null</span><span class="s4">;</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s6"> cleanName </span><span class="s4">=</span><span class="s6"> m</span><span class="s4">[</span><span class="s10">1</span><span class="s4">].</span><span class="s6">replace</span><span class="s4">(</span><span class="s2">/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/</span><span class="s1">g</span><span class="s4">,</span><span class="s6"> </span><span class="s5">'$1$2'</span><span class="s4">).</span><span class="s6">trim</span><span class="s4">();</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p2"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">return</span><span class="s6"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>description</span><span class="s4">:</span><span class="s2"> cleanName</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>quantity</span><span class="s4">:</span><span class="s2"> m</span><span class="s4">[</span><span class="s10">2</span><span class="s4">],</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>unitPrice</span><span class="s4">:</span><span class="s2"> m</span><span class="s4">[</span><span class="s10">3</span><span class="s4">].</span><span class="s2">replace</span><span class="s4">(</span><span class="s8">/[$,]/</span><span class="s1">g</span><span class="s4">,</span><span class="s2"> </span><span class="s5">""</span><span class="s4">),</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>amount</span><span class="s4">:</span><span class="s2"> m</span><span class="s4">[</span><span class="s10">4</span><span class="s4">].</span><span class="s2">replace</span><span class="s4">(</span><span class="s8">/[$,]/</span><span class="s1">g</span><span class="s4">,</span><span class="s2"> </span><span class="s5">""</span><span class="s4">),</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>remarks</span><span class="s4">:</span><span class="s2"> m</span><span class="s4">[</span><span class="s10">5</span><span class="s4">]</span><span class="s2"> </span><span class="s4">?</span><span class="s2"> m</span><span class="s4">[</span><span class="s10">5</span><span class="s4">].</span><span class="s2">trim</span><span class="s4">()</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">};</span></p>
-<p class="p7"><span class="s2">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s1">function</span><span class="s2"> parseInvoiceDetails</span><span class="s4">(</span><span class="s2">lines</span><span class="s4">,</span><span class="s2"> invoiceNumberVal</span><span class="s4">,</span><span class="s2"> dateVal</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> results </span><span class="s4">=</span><span class="s2"> </span><span class="s4">[];</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">let</span><span class="s2"> startIndex </span><span class="s4">=</span><span class="s2"> </span><span class="s4">-</span><span class="s10">1</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">for</span><span class="s2"> </span><span class="s4">(</span><span class="s1">let</span><span class="s2"> i </span><span class="s4">=</span><span class="s2"> </span><span class="s10">0</span><span class="s4">;</span><span class="s2"> i </span><span class="s4">&lt;</span><span class="s2"> lines</span><span class="s4">.</span><span class="s2">length</span><span class="s4">;</span><span class="s2"> i</span><span class="s4">++)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">lines</span><span class="s4">[</span><span class="s2">i</span><span class="s4">].</span><span class="s2">includes</span><span class="s4">(</span><span class="s5">"品"</span><span class="s4">)</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">(</span><span class="s2">lines</span><span class="s4">[</span><span class="s2">i</span><span class="s4">].</span><span class="s2">includes</span><span class="s4">(</span><span class="s5">"數"</span><span class="s4">)</span><span class="s2"> </span><span class="s4">||</span><span class="s2"> lines</span><span class="s4">[</span><span class="s2">i</span><span class="s4">].</span><span class="s2">includes</span><span class="s4">(</span><span class="s5">"額"</span><span class="s4">)))</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span>startIndex </span><span class="s4">=</span><span class="s2"> i </span><span class="s4">+</span><span class="s2"> </span><span class="s10">1</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">break</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">startIndex </span><span class="s4">!==</span><span class="s2"> </span><span class="s4">-</span><span class="s10">1</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">for</span><span class="s2"> </span><span class="s4">(</span><span class="s1">let</span><span class="s2"> i </span><span class="s4">=</span><span class="s2"> startIndex</span><span class="s4">;</span><span class="s2"> i </span><span class="s4">&lt;</span><span class="s2"> lines</span><span class="s4">.</span><span class="s2">length</span><span class="s4">;</span><span class="s2"> i</span><span class="s4">++)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">const</span><span class="s2"> line </span><span class="s4">=</span><span class="s2"> lines</span><span class="s4">[</span><span class="s2">i</span><span class="s4">].</span><span class="s2">trim</span><span class="s4">();</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(!</span><span class="s2">line</span><span class="s4">)</span><span class="s2"> </span><span class="s1">continue</span><span class="s4">;</span></p>
-<p class="p8"><span class="s6"><span class="Apple-converted-space">      </span></span><span class="s1">if</span><span class="s6"> </span><span class="s4">(</span><span class="s6">line</span><span class="s4">.</span><span class="s6">match</span><span class="s4">(</span><span class="s2">/(總\s*計|合\s*計|銷\s*售\s*額|營\s*業\s*稅|賣\s*方|統\s*一\s*編\s*號)/</span><span class="s4">))</span><span class="s6"> </span><span class="s1">break</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">const</span><span class="s2"> row </span><span class="s4">=</span><span class="s2"> parseItemRow</span><span class="s4">(</span><span class="s2">line</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">row </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">!</span><span class="s2">isNaN</span><span class="s4">(</span><span class="s3">Number</span><span class="s4">(</span><span class="s2">row</span><span class="s4">.</span><span class="s2">amount</span><span class="s4">)))</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span>results</span><span class="s4">.</span><span class="s2">push</span><span class="s4">({</span><span class="s2"> invoiceNumber</span><span class="s4">:</span><span class="s2"> invoiceNumberVal</span><span class="s4">,</span><span class="s2"> date</span><span class="s4">:</span><span class="s2"> dateVal</span><span class="s4">,</span><span class="s2"> </span><span class="s4">...</span><span class="s2">row </span><span class="s4">});</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">return</span><span class="s2"> results</span><span class="s4">;</span></p>
-<p class="p7"><span class="s2">}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// --- Service: Orchestrator ---</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s1">const</span><span class="s2"> extractDataFromPdf </span><span class="s4">=</span><span class="s2"> </span><span class="s1">async</span><span class="s2"> </span><span class="s4">(</span><span class="s2">file</span><span class="s4">,</span><span class="s2"> mode</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> pdfjsLib </span><span class="s4">=</span><span class="s2"> window</span><span class="s4">.</span><span class="s2">pdfjsLib</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(!</span><span class="s2">pdfjsLib</span><span class="s4">)</span><span class="s2"> </span><span class="s1">throw</span><span class="s2"> </span><span class="s1">new</span><span class="s2"> </span><span class="s3">Error</span><span class="s4">(</span><span class="s5">'PDF 核心尚未載入'</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> arrayBuffer </span><span class="s4">=</span><span class="s2"> </span><span class="s1">await</span><span class="s2"> file</span><span class="s4">.</span><span class="s2">arrayBuffer</span><span class="s4">();</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> pdf </span><span class="s4">=</span><span class="s2"> </span><span class="s1">await</span><span class="s2"> pdfjsLib</span><span class="s4">.</span><span class="s2">getDocument</span><span class="s4">({</span><span class="s2"> data</span><span class="s4">:</span><span class="s2"> arrayBuffer </span><span class="s4">}).</span><span class="s2">promise</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> extractedItems </span><span class="s4">=</span><span class="s2"> </span><span class="s4">[];</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">for</span><span class="s2"> </span><span class="s4">(</span><span class="s1">let</span><span class="s2"> pageNum </span><span class="s4">=</span><span class="s2"> </span><span class="s10">1</span><span class="s4">;</span><span class="s2"> pageNum </span><span class="s4">&lt;=</span><span class="s2"> pdf</span><span class="s4">.</span><span class="s2">numPages</span><span class="s4">;</span><span class="s2"> pageNum</span><span class="s4">++)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> page </span><span class="s4">=</span><span class="s2"> </span><span class="s1">await</span><span class="s2"> pdf</span><span class="s4">.</span><span class="s2">getPage</span><span class="s4">(</span><span class="s2">pageNum</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> textContent </span><span class="s4">=</span><span class="s2"> </span><span class="s1">await</span><span class="s2"> page</span><span class="s4">.</span><span class="s2">getTextContent</span><span class="s4">();</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> lines </span><span class="s4">=</span><span class="s2"> groupTextItemsToLines</span><span class="s4">(</span><span class="s2">textContent</span><span class="s4">.</span><span class="s2">items</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> headerData </span><span class="s4">=</span><span class="s2"> parseInvoiceHeader</span><span class="s4">(</span><span class="s2">lines</span><span class="s4">);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">mode </span><span class="s4">===</span><span class="s2"> </span><span class="s5">'header'</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">headerData</span><span class="s4">.</span><span class="s2">invoiceNumber </span><span class="s4">||</span><span class="s2"> headerData</span><span class="s4">.</span><span class="s2">grandTotal</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span>extractedItems</span><span class="s4">.</span><span class="s2">push</span><span class="s4">({</span><span class="s2"> </span><span class="s4">...</span><span class="s2">headerData</span><span class="s4">,</span><span class="s2"> pageNumber</span><span class="s4">:</span><span class="s2"> pageNum</span><span class="s4">,</span><span class="s2"> rawLineString</span><span class="s4">:</span><span class="s2"> lines </span><span class="s4">});</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">}</span><span class="s2"> </span><span class="s1">else</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">const</span><span class="s2"> details </span><span class="s4">=</span><span class="s2"> parseInvoiceDetails</span><span class="s4">(</span><span class="s2">lines</span><span class="s4">,</span><span class="s2"> headerData</span><span class="s4">.</span><span class="s2">invoiceNumber </span><span class="s4">||</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span><span class="s2"> headerData</span><span class="s4">.</span><span class="s2">date </span><span class="s4">||</span><span class="s2"> </span><span class="s5">""</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">details</span><span class="s4">.</span><span class="s2">length </span><span class="s4">&gt;</span><span class="s2"> </span><span class="s10">0</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span>details</span><span class="s4">.</span><span class="s2">forEach</span><span class="s4">(</span><span class="s2">d </span><span class="s4">=&gt;</span><span class="s2"> extractedItems</span><span class="s4">.</span><span class="s2">push</span><span class="s4">({</span><span class="s2"> </span><span class="s4">...</span><span class="s2">d</span><span class="s4">,</span><span class="s2"> pageNumber</span><span class="s4">:</span><span class="s2"> pageNum</span><span class="s4">,</span><span class="s2"> rawLineString</span><span class="s4">:</span><span class="s2"> lines </span><span class="s4">}));</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">}</span><span class="s2"> </span><span class="s1">else</span><span class="s2"> </span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">headerData</span><span class="s4">.</span><span class="s2">invoiceNumber</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">         </span>extractedItems</span><span class="s4">.</span><span class="s2">push</span><span class="s4">({</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">             </span>invoiceNumber</span><span class="s4">:</span><span class="s2"> headerData</span><span class="s4">.</span><span class="s2">invoiceNumber</span><span class="s4">,</span><span class="s2"> date</span><span class="s4">:</span><span class="s2"> headerData</span><span class="s4">.</span><span class="s2">date</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">             </span>description</span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span><span class="s2"> quantity</span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span><span class="s2"> unitPrice</span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span><span class="s2"> amount</span><span class="s4">:</span><span class="s2"> </span><span class="s5">""</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">             </span>status</span><span class="s4">:</span><span class="s2"> </span><span class="s5">'warning'</span><span class="s4">,</span><span class="s2"> errorMessage</span><span class="s4">:</span><span class="s2"> </span><span class="s5">'未偵測到明細'</span><span class="s4">,</span><span class="s2"> pageNumber</span><span class="s4">:</span><span class="s2"> pageNum</span><span class="s4">,</span><span class="s2"> rawLineString</span><span class="s4">:</span><span class="s2"> lines</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">         </span></span><span class="s4">});</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">return</span><span class="s2"> extractedItems</span><span class="s4">;</span></p>
-<p class="p7"><span class="s2">};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s2">// --- Components ---</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s1">const</span><span class="s2"> </span><span class="s3">Inspector</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> </span><span class="s4">({</span><span class="s2"> lines </span><span class="s4">})</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> </span><span class="s4">[</span><span class="s2">isOpen</span><span class="s4">,</span><span class="s2"> setIsOpen</span><span class="s4">]</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> useState</span><span class="s4">(</span><span class="s1">false</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(!</span><span class="s2">lines </span><span class="s4">||</span><span class="s2"> lines</span><span class="s4">.</span><span class="s2">length </span><span class="s4">===</span><span class="s2"> </span><span class="s10">0</span><span class="s4">)</span><span class="s2"> </span><span class="s1">return</span><span class="s2"> </span><span class="s1">null</span><span class="s4">;</span></p>
-<p class="p2"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">return</span><span class="s6"> </span><span class="s4">(</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">    </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"mt-2 border-t border-gray-100 pt-2"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">      </span></span><span class="s4">&lt;</span><span class="s6">button onClick</span><span class="s4">={()</span><span class="s6"> </span><span class="s4">=&gt;</span><span class="s6"> setIsOpen</span><span class="s4">(!</span><span class="s6">isOpen</span><span class="s4">)}</span><span class="s6"> className</span><span class="s4">=</span><span class="s2">"flex items-center gap-1 text-xs text-blue-600 font-medium"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">{</span><span class="s2">isOpen </span><span class="s4">?</span><span class="s2"> </span><span class="s4">&lt;</span><span class="s3">ChevronUp</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"w-3 h-3"</span><span class="s2"> /&gt; </span><span class="s4">:</span><span class="s2"> </span><span class="s4">&lt;</span><span class="s3">ChevronDown</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"w-3 h-3"</span><span class="s2"> /&gt;</span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">{</span><span class="s2">isOpen </span><span class="s4">?</span><span class="s2"> </span><span class="s5">'隱藏原始資料'</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">'檢視原始資料'</span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">&lt;/</span><span class="s2">button</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">{</span><span class="s2">isOpen </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">(</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">        </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"mt-2 p-3 bg-gray-800 text-green-400 font-mono text-xs rounded overflow-x-auto max-h-40"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">{</span><span class="s2">lines</span><span class="s4">.</span><span class="s2">map</span><span class="s4">((</span><span class="s2">l</span><span class="s4">,</span><span class="s2"> i</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">&lt;</span><span class="s2">div key</span><span class="s4">={</span><span class="s2">i</span><span class="s4">}&gt;{</span><span class="s2">i</span><span class="s4">}:</span><span class="s2"> </span><span class="s4">{</span><span class="s2">l</span><span class="s4">}&lt;/</span><span class="s2">div</span><span class="s4">&gt;)}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">)}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">);</span></p>
-<p class="p7"><span class="s2">};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s1">const</span><span class="s2"> </span><span class="s3">StatsCard</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> </span><span class="s4">({</span><span class="s2"> title</span><span class="s4">,</span><span class="s2"> value</span><span class="s4">,</span><span class="s2"> icon</span><span class="s4">:</span><span class="s2"> </span><span class="s3">Icon</span><span class="s4">,</span><span class="s2"> colorClass</span><span class="s4">,</span><span class="s2"> iconBgClass </span><span class="s4">})</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">(</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4 transition-all hover:shadow-md"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">={</span><span class="s5">`p-4 rounded-2xl </span><span class="s4">${</span><span class="s2">iconBgClass</span><span class="s4">}</span><span class="s5">`</span><span class="s4">}&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">&lt;</span><span class="s3">Icon</span><span class="s2"> className</span><span class="s4">={</span><span class="s5">`w-6 h-6 </span><span class="s4">${</span><span class="s2">colorClass</span><span class="s4">}</span><span class="s5">`</span><span class="s4">}</span><span class="s2"> /&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">&lt;</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">      </span></span><span class="s4">&lt;</span><span class="s6">p className</span><span class="s4">=</span><span class="s2">"text-sm font-bold text-gray-500 mb-1"</span><span class="s4">&gt;{</span><span class="s6">title</span><span class="s4">}&lt;/</span><span class="s6">p</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">      </span></span><span class="s4">&lt;</span><span class="s6">h3 className</span><span class="s4">=</span><span class="s2">"text-2xl font-black text-slate-800"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span>$</span><span class="s4">{(</span><span class="s2">value </span><span class="s4">||</span><span class="s2"> </span><span class="s10">0</span><span class="s4">).</span><span class="s2">toLocaleString</span><span class="s4">()}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">&lt;/</span><span class="s2">h3</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p7"><span class="s2">);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p2"><span class="s2">export</span><span class="s6"> </span><span class="s2">default</span><span class="s6"> </span><span class="s2">function</span><span class="s6"> </span><span class="s3">App</span><span class="s4">()</span><span class="s6"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> </span><span class="s4">[</span><span class="s2">invoices</span><span class="s4">,</span><span class="s2"> setInvoices</span><span class="s4">]</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> useState</span><span class="s4">([]);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> </span><span class="s4">[</span><span class="s2">files</span><span class="s4">,</span><span class="s2"> setFiles</span><span class="s4">]</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> useState</span><span class="s4">([]);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> </span><span class="s4">[</span><span class="s2">isDragging</span><span class="s4">,</span><span class="s2"> setIsDragging</span><span class="s4">]</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> useState</span><span class="s4">(</span><span class="s1">false</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> </span><span class="s4">[</span><span class="s2">mode</span><span class="s4">,</span><span class="s2"> setMode</span><span class="s4">]</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> useState</span><span class="s4">(</span><span class="s5">'header'</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> </span><span class="s4">[</span><span class="s2">isPdfReady</span><span class="s4">,</span><span class="s2"> setIsPdfReady</span><span class="s4">]</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> useState</span><span class="s4">(</span><span class="s1">false</span><span class="s4">);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">// 統計數值計算</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> stats </span><span class="s4">=</span><span class="s2"> useMemo</span><span class="s4">(()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">mode </span><span class="s4">!==</span><span class="s2"> </span><span class="s5">'header'</span><span class="s2"> </span><span class="s4">||</span><span class="s2"> invoices</span><span class="s4">.</span><span class="s2">length </span><span class="s4">===</span><span class="s2"> </span><span class="s10">0</span><span class="s4">)</span><span class="s2"> </span><span class="s1">return</span><span class="s2"> </span><span class="s1">null</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">return</span><span class="s2"> invoices</span><span class="s4">.</span><span class="s2">reduce</span><span class="s4">((</span><span class="s2">acc</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">({</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span>salesTotal</span><span class="s4">:</span><span class="s2"> acc</span><span class="s4">.</span><span class="s2">salesTotal </span><span class="s4">+</span><span class="s2"> </span><span class="s4">(</span><span class="s2">toNumber</span><span class="s4">(</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">salesTotal</span><span class="s4">)</span><span class="s2"> </span><span class="s4">||</span><span class="s2"> </span><span class="s10">0</span><span class="s4">),</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span>taxTotal</span><span class="s4">:</span><span class="s2"> acc</span><span class="s4">.</span><span class="s2">taxTotal </span><span class="s4">+</span><span class="s2"> </span><span class="s4">(</span><span class="s2">toNumber</span><span class="s4">(</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">taxAmount</span><span class="s4">)</span><span class="s2"> </span><span class="s4">||</span><span class="s2"> </span><span class="s10">0</span><span class="s4">),</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span>grandTotal</span><span class="s4">:</span><span class="s2"> acc</span><span class="s4">.</span><span class="s2">grandTotal </span><span class="s4">+</span><span class="s2"> </span><span class="s4">(</span><span class="s2">toNumber</span><span class="s4">(</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">grandTotal</span><span class="s4">)</span><span class="s2"> </span><span class="s4">||</span><span class="s2"> </span><span class="s10">0</span><span class="s4">)</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">}),</span><span class="s2"> </span><span class="s4">{</span><span class="s2"> salesTotal</span><span class="s4">:</span><span class="s2"> </span><span class="s10">0</span><span class="s4">,</span><span class="s2"> taxTotal</span><span class="s4">:</span><span class="s2"> </span><span class="s10">0</span><span class="s4">,</span><span class="s2"> grandTotal</span><span class="s4">:</span><span class="s2"> </span><span class="s10">0</span><span class="s2"> </span><span class="s4">});</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">},</span><span class="s2"> </span><span class="s4">[</span><span class="s2">invoices</span><span class="s4">,</span><span class="s2"> mode</span><span class="s4">]);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span>useEffect</span><span class="s4">(()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">window</span><span class="s4">.</span><span class="s2">pdfjsLib</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span>setIsPdfReady</span><span class="s4">(</span><span class="s1">true</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">return</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> script </span><span class="s4">=</span><span class="s2"> document</span><span class="s4">.</span><span class="s2">createElement</span><span class="s4">(</span><span class="s5">'script'</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>script</span><span class="s4">.</span><span class="s2">src </span><span class="s4">=</span><span class="s2"> </span><span class="s3">PDFJS_CDN</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>script</span><span class="s4">.</span><span class="s1">async</span><span class="s2"> </span><span class="s4">=</span><span class="s2"> </span><span class="s1">true</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>script</span><span class="s4">.</span><span class="s2">onload </span><span class="s4">=</span><span class="s2"> </span><span class="s4">()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p3"><span class="s6"><span class="Apple-converted-space">      </span>window</span><span class="s4">.</span><span class="s6">pdfjsLib</span><span class="s4">.</span><span class="s2">GlobalWorkerOptions</span><span class="s4">.</span><span class="s6">workerSrc </span><span class="s4">=</span><span class="s6"> </span><span class="s2">PDFJS_WORKER_CDN</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span>setIsPdfReady</span><span class="s4">(</span><span class="s1">true</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">};</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>document</span><span class="s4">.</span><span class="s2">body</span><span class="s4">.</span><span class="s2">appendChild</span><span class="s4">(</span><span class="s2">script</span><span class="s4">);</span></p>
-<p class="p7"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">},</span><span class="s6"> </span><span class="s2">[]);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span>useEffect</span><span class="s4">(()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">files</span><span class="s4">.</span><span class="s2">length </span><span class="s4">&gt;</span><span class="s2"> </span><span class="s10">0</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> isPdfReady</span><span class="s4">)</span><span class="s2"> reparseFiles</span><span class="s4">();</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">},</span><span class="s2"> </span><span class="s4">[</span><span class="s2">files</span><span class="s4">,</span><span class="s2"> isPdfReady</span><span class="s4">,</span><span class="s2"> mode</span><span class="s4">]);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> reparseFiles </span><span class="s4">=</span><span class="s2"> </span><span class="s1">async</span><span class="s2"> </span><span class="s4">()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> newItems </span><span class="s4">=</span><span class="s2"> </span><span class="s4">[];</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">for</span><span class="s2"> </span><span class="s4">(</span><span class="s1">const</span><span class="s2"> file </span><span class="s1">of</span><span class="s2"> files</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s1">try</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s1">const</span><span class="s2"> results </span><span class="s4">=</span><span class="s2"> </span><span class="s1">await</span><span class="s2"> extractDataFromPdf</span><span class="s4">(</span><span class="s2">file</span><span class="s4">,</span><span class="s2"> mode</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s1">const</span><span class="s2"> rows </span><span class="s4">=</span><span class="s2"> results</span><span class="s4">.</span><span class="s2">map</span><span class="s4">((</span><span class="s2">res</span><span class="s4">,</span><span class="s2"> idx</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">({</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span>id</span><span class="s4">:</span><span class="s2"> </span><span class="s5">`</span><span class="s4">${</span><span class="s2">file</span><span class="s4">.</span><span class="s2">name</span><span class="s4">}</span><span class="s5">-</span><span class="s4">${</span><span class="s2">idx</span><span class="s4">}</span><span class="s5">-</span><span class="s4">${</span><span class="s3">Math</span><span class="s4">.</span><span class="s2">random</span><span class="s4">()}</span><span class="s5">`</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span>fileName</span><span class="s4">:</span><span class="s2"> file</span><span class="s4">.</span><span class="s2">name</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span>status</span><span class="s4">:</span><span class="s2"> res</span><span class="s4">.</span><span class="s2">status </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'success'</span><span class="s4">,</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">...</span><span class="s2">res</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">}));</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span>newItems</span><span class="s4">.</span><span class="s2">push</span><span class="s4">(...</span><span class="s2">rows</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">}</span><span class="s2"> </span><span class="s1">catch</span><span class="s2"> </span><span class="s4">(</span><span class="s2">e</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span><span class="s2"> console</span><span class="s4">.</span><span class="s2">error</span><span class="s4">(</span><span class="s2">e</span><span class="s4">);</span><span class="s2"> </span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>setInvoices</span><span class="s4">(</span><span class="s2">newItems</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> handleFiles </span><span class="s4">=</span><span class="s2"> </span><span class="s4">(</span><span class="s2">fileList</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(!</span><span class="s2">fileList</span><span class="s4">)</span><span class="s2"> </span><span class="s1">return</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>setFiles</span><span class="s4">(</span><span class="s2">prev </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">[...</span><span class="s2">prev</span><span class="s4">,</span><span class="s2"> </span><span class="s4">...</span><span class="s3">Array</span><span class="s4">.</span><span class="s1">from</span><span class="s4">(</span><span class="s2">fileList</span><span class="s4">)]);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> handleDrop </span><span class="s4">=</span><span class="s2"> </span><span class="s4">(</span><span class="s2">e</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>e</span><span class="s4">.</span><span class="s2">preventDefault</span><span class="s4">();</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>setIsDragging</span><span class="s4">(</span><span class="s1">false</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">isPdfReady</span><span class="s4">)</span><span class="s2"> handleFiles</span><span class="s4">(</span><span class="s2">e</span><span class="s4">.</span><span class="s2">dataTransfer</span><span class="s4">.</span><span class="s2">files</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> handleClear </span><span class="s4">=</span><span class="s2"> </span><span class="s4">()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span><span class="s2"> setInvoices</span><span class="s4">([]);</span><span class="s2"> setFiles</span><span class="s4">([]);</span><span class="s2"> </span><span class="s4">};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s1">const</span><span class="s2"> handleExportCsv </span><span class="s4">=</span><span class="s2"> </span><span class="s4">()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">let</span><span class="s2"> headers</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">let</span><span class="s2"> rowMapper</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">if</span><span class="s2"> </span><span class="s4">(</span><span class="s2">mode </span><span class="s4">===</span><span class="s2"> </span><span class="s5">'header'</span><span class="s4">)</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">        </span>headers </span><span class="s4">=</span><span class="s6"> </span><span class="s4">[</span><span class="s2">'檔案'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'發票號碼'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'格式'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'開立日期'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'銷售額'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'應稅'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'零稅率'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'免稅'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'稅額(金額)'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'總計'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'統一編號'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'賣方名稱'</span><span class="s4">];</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span>rowMapper </span><span class="s4">=</span><span class="s2"> </span><span class="s4">(</span><span class="s2">inv</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">[</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>inv</span><span class="s4">.</span><span class="s2">fileName</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">invoiceNumber</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">format</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">date</span><span class="s4">,</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>inv</span><span class="s4">.</span><span class="s2">salesTotal</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">taxTypeTaxable</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">taxTypeZero</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">taxTypeExempt</span><span class="s4">,</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>inv</span><span class="s4">.</span><span class="s2">taxAmount</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">grandTotal</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">sellerId</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">sellerName</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">].</span><span class="s2">map</span><span class="s4">(</span><span class="s2">s </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s5">`"</span><span class="s4">${(</span><span class="s2">s </span><span class="s4">||</span><span class="s2"> </span><span class="s5">''</span><span class="s4">).</span><span class="s2">replace</span><span class="s4">(</span><span class="s8">/"/</span><span class="s1">g</span><span class="s4">,</span><span class="s2"> </span><span class="s5">'""'</span><span class="s4">)}</span><span class="s5">"`</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">}</span><span class="s2"> </span><span class="s1">else</span><span class="s2"> </span><span class="s4">{</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">        </span>headers </span><span class="s4">=</span><span class="s6"> </span><span class="s4">[</span><span class="s2">'檔案'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'發票號碼'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'日期'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'品名'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'數量'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'單價'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'金額'</span><span class="s4">,</span><span class="s6"> </span><span class="s2">'備註'</span><span class="s4">];</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span>rowMapper </span><span class="s4">=</span><span class="s2"> </span><span class="s4">(</span><span class="s2">inv</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">[</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>inv</span><span class="s4">.</span><span class="s2">fileName</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">invoiceNumber</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">date</span><span class="s4">,</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>inv</span><span class="s4">.</span><span class="s2">description</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">quantity</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">unitPrice</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">amount</span><span class="s4">,</span><span class="s2"> inv</span><span class="s4">.</span><span class="s2">remarks</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">].</span><span class="s2">map</span><span class="s4">(</span><span class="s2">s </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s5">`"</span><span class="s4">${(</span><span class="s2">s </span><span class="s4">||</span><span class="s2"> </span><span class="s5">''</span><span class="s4">).</span><span class="s2">replace</span><span class="s4">(</span><span class="s8">/"/</span><span class="s1">g</span><span class="s4">,</span><span class="s2"> </span><span class="s5">'""'</span><span class="s4">)}</span><span class="s5">"`</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> csvContent </span><span class="s4">=</span><span class="s2"> </span><span class="s4">[</span><span class="s2">headers</span><span class="s4">.</span><span class="s2">join</span><span class="s4">(</span><span class="s5">','</span><span class="s4">),</span><span class="s2"> </span><span class="s4">...</span><span class="s2">invoices</span><span class="s4">.</span><span class="s2">map</span><span class="s4">(</span><span class="s2">inv </span><span class="s4">=&gt;</span><span class="s2"> rowMapper</span><span class="s4">(</span><span class="s2">inv</span><span class="s4">).</span><span class="s2">join</span><span class="s4">(</span><span class="s5">','</span><span class="s4">))].</span><span class="s2">join</span><span class="s4">(</span><span class="s5">'\n'</span><span class="s4">);</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s6"> blob </span><span class="s4">=</span><span class="s6"> </span><span class="s1">new</span><span class="s6"> </span><span class="s3">Blob</span><span class="s4">([</span><span class="s2">'\uFEFF'</span><span class="s6"> </span><span class="s4">+</span><span class="s6"> csvContent</span><span class="s4">],</span><span class="s6"> </span><span class="s4">{</span><span class="s6"> </span><span class="s1">type</span><span class="s4">:</span><span class="s6"> </span><span class="s2">'text/csv;charset=utf-8;'</span><span class="s6"> </span><span class="s4">});</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s1">const</span><span class="s2"> link </span><span class="s4">=</span><span class="s2"> document</span><span class="s4">.</span><span class="s2">createElement</span><span class="s4">(</span><span class="s5">'a'</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>link</span><span class="s4">.</span><span class="s2">href </span><span class="s4">=</span><span class="s2"> </span><span class="s3">URL</span><span class="s4">.</span><span class="s2">createObjectURL</span><span class="s4">(</span><span class="s2">blob</span><span class="s4">);</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>link</span><span class="s4">.</span><span class="s2">download </span><span class="s4">=</span><span class="s2"> </span><span class="s5">`invoices_</span><span class="s4">${</span><span class="s2">mode</span><span class="s4">}</span><span class="s5">_</span><span class="s4">${</span><span class="s1">new</span><span class="s2"> </span><span class="s3">Date</span><span class="s4">().</span><span class="s2">toISOString</span><span class="s4">().</span><span class="s2">slice</span><span class="s4">(</span><span class="s10">0</span><span class="s4">,</span><span class="s10">10</span><span class="s4">)}</span><span class="s5">.csv`</span><span class="s4">;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span>link</span><span class="s4">.</span><span class="s2">click</span><span class="s4">();</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p2"><span class="s6"><span class="Apple-converted-space">  </span></span><span class="s2">return</span><span class="s6"> </span><span class="s4">(</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">    </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"min-h-screen bg-gray-50 text-gray-800 p-8 font-sans"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">      </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"max-w-7xl mx-auto space-y-6"</span><span class="s4">&gt;</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">        </span></span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">        </span></span><span class="s4">&lt;</span><span class="s6">header className</span><span class="s4">=</span><span class="s2">"flex flex-col md:flex-row justify-between items-start md:items-end gap-4"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"flex flex-col gap-1"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;</span><span class="s6">h1 className</span><span class="s4">=</span><span class="s2">"text-3xl font-bold text-gray-900 flex items-center gap-3 flex-wrap"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;</span><span class="s3">FileText</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"w-8 h-8 text-blue-600"</span><span class="s2"> /&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s11">電子發票解析器</span><span class="s2"> </span><span class="s4">(</span><span class="s11">雙模式</span><span class="s4">)</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 rounded-lg text-base font-bold tracking-wide shadow-sm"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;</span><span class="s3">ShieldCheck</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"w-4 h-4 text-emerald-600"</span><span class="s2"> /&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s10">1.6</span><span class="s4">.</span><span class="s10">1</span><span class="s2"> </span><span class="s4">(</span><span class="s11">定版</span><span class="s4">)</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;/</span><span class="s2">h1</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;</span><span class="s2">p className</span><span class="s4">=</span><span class="s5">"text-gray-500"</span><span class="s4">&gt;</span><span class="s11">支援「主檔模式」與「明細模式」切換</span><span class="s4">&lt;/</span><span class="s2">p</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">          </span></span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"flex bg-white p-1 rounded-xl border border-gray-300 shadow-sm"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">             </span></span><span class="s4">&lt;</span><span class="s2">button</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span>onClick</span><span class="s4">={()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> setMode</span><span class="s4">(</span><span class="s5">'header'</span><span class="s4">)}</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                </span>className</span><span class="s4">={</span><span class="s2">`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all </span><span class="s4">${</span><span class="s6">mode </span><span class="s4">===</span><span class="s6"> </span><span class="s2">'header'</span><span class="s6"> </span><span class="s4">?</span><span class="s6"> </span><span class="s2">'bg-blue-600 text-white shadow'</span><span class="s6"> </span><span class="s4">:</span><span class="s6"> </span><span class="s2">'text-gray-600 hover:bg-gray-100'</span><span class="s4">}</span><span class="s2">`</span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">             </span></span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;</span><span class="s3">FileSpreadsheet</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"w-4 h-4"</span><span class="s2"> /&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s11">模式</span><span class="s2"> </span><span class="s10">1</span><span class="s11">：發票主檔</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">             </span></span><span class="s4">&lt;/</span><span class="s2">button</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">             </span></span><span class="s4">&lt;</span><span class="s2">button</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span>onClick</span><span class="s4">={()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> setMode</span><span class="s4">(</span><span class="s5">'details'</span><span class="s4">)}</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                </span>className</span><span class="s4">={</span><span class="s2">`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all </span><span class="s4">${</span><span class="s6">mode </span><span class="s4">===</span><span class="s6"> </span><span class="s2">'details'</span><span class="s6"> </span><span class="s4">?</span><span class="s6"> </span><span class="s2">'bg-blue-600 text-white shadow'</span><span class="s6"> </span><span class="s4">:</span><span class="s6"> </span><span class="s2">'text-gray-600 hover:bg-gray-100'</span><span class="s4">}</span><span class="s2">`</span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">             </span></span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;</span><span class="s3">List</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"w-4 h-4"</span><span class="s2"> /&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s11">模式</span><span class="s2"> </span><span class="s10">2</span><span class="s11">：明細列表</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">             </span></span><span class="s4">&lt;/</span><span class="s2">button</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">&lt;/</span><span class="s2">header</span><span class="s4">&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s6"><span class="Apple-converted-space">        </span></span><span class="s4">{</span><span class="s2">/* 統計資訊區塊 */</span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">{</span><span class="s2">mode </span><span class="s4">===</span><span class="s2"> </span><span class="s5">'header'</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> stats </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">(</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-in fade-in slide-in-from-top-4 duration-500"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;</span><span class="s3">StatsCard</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>title</span><span class="s4">=</span><span class="s5">"總銷售金額 (未稅)"</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>value</span><span class="s4">={</span><span class="s2">stats</span><span class="s4">.</span><span class="s2">salesTotal</span><span class="s4">}</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>icon</span><span class="s4">={</span><span class="s3">TrendingUp</span><span class="s4">}</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>colorClass</span><span class="s4">=</span><span class="s5">"text-blue-600"</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>iconBgClass</span><span class="s4">=</span><span class="s5">"bg-blue-50"</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>/&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;</span><span class="s3">StatsCard</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>title</span><span class="s4">=</span><span class="s5">"估算總稅額"</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>value</span><span class="s4">={</span><span class="s2">stats</span><span class="s4">.</span><span class="s2">taxTotal</span><span class="s4">}</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>icon</span><span class="s4">={</span><span class="s3">PieChart</span><span class="s4">}</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>colorClass</span><span class="s4">=</span><span class="s5">"text-amber-600"</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>iconBgClass</span><span class="s4">=</span><span class="s5">"bg-amber-50"</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>/&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;</span><span class="s3">StatsCard</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>title</span><span class="s4">=</span><span class="s5">"應付總計 (含稅)"</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>value</span><span class="s4">={</span><span class="s2">stats</span><span class="s4">.</span><span class="s2">grandTotal</span><span class="s4">}</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>icon</span><span class="s4">={</span><span class="s3">ShieldCheck</span><span class="s4">}</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>colorClass</span><span class="s4">=</span><span class="s5">"text-emerald-600"</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span>iconBgClass</span><span class="s4">=</span><span class="s5">"bg-emerald-50"</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>/&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">)}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">{</span><span class="s2">invoices</span><span class="s4">.</span><span class="s2">length </span><span class="s4">===</span><span class="s2"> </span><span class="s10">0</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">(</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;</span><span class="s2">section<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">            </span>className</span><span class="s4">={</span><span class="s2">`border-2 border-dashed rounded-2xl p-20 text-center transition-all cursor-pointer group<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s4">${</span><span class="s6">isDragging </span><span class="s4">?</span><span class="s6"> </span><span class="s2">'border-blue-500 bg-blue-50'</span><span class="s6"> </span><span class="s4">:</span><span class="s6"> </span><span class="s2">'border-gray-300 bg-white hover:border-blue-400'</span><span class="s4">}</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s4">${!</span><span class="s6">isPdfReady </span><span class="s4">?</span><span class="s6"> </span><span class="s2">'opacity-60 cursor-not-allowed'</span><span class="s6"> </span><span class="s4">:</span><span class="s6"> </span><span class="s2">''</span><span class="s4">}</span><span class="s2">`</span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>onDragOver</span><span class="s4">={(</span><span class="s2">e</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">{</span><span class="s2"> e</span><span class="s4">.</span><span class="s2">preventDefault</span><span class="s4">();</span><span class="s2"> </span><span class="s1">if</span><span class="s4">(</span><span class="s2">isPdfReady</span><span class="s4">)</span><span class="s2"> setIsDragging</span><span class="s4">(</span><span class="s1">true</span><span class="s4">);</span><span class="s2"> </span><span class="s4">}}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>onDragLeave</span><span class="s4">={()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> setIsDragging</span><span class="s4">(</span><span class="s1">false</span><span class="s4">)}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>onDrop</span><span class="s4">={</span><span class="s2">handleDrop</span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span>onClick</span><span class="s4">={()</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> isPdfReady </span><span class="s4">&amp;&amp;</span><span class="s2"> document</span><span class="s4">.</span><span class="s2">getElementById</span><span class="s4">(</span><span class="s5">'fileInput'</span><span class="s4">)?.</span><span class="s2">click</span><span class="s4">()}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;</span><span class="s2">input </span><span class="s1">type</span><span class="s4">=</span><span class="s5">"file"</span><span class="s2"> id</span><span class="s4">=</span><span class="s5">"fileInput"</span><span class="s2"> multiple accept</span><span class="s4">=</span><span class="s5">".pdf"</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"hidden"</span><span class="s2"> disabled</span><span class="s4">={!</span><span class="s2">isPdfReady</span><span class="s4">}</span><span class="s2"> onChange</span><span class="s4">={(</span><span class="s2">e</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> handleFiles</span><span class="s4">(</span><span class="s2">e</span><span class="s4">.</span><span class="s2">target</span><span class="s4">.</span><span class="s2">files</span><span class="s4">)}</span><span class="s2"> /&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"flex flex-col items-center gap-4"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">={</span><span class="s2">`p-5 rounded-full transition-colors </span><span class="s4">${</span><span class="s6">isPdfReady </span><span class="s4">?</span><span class="s6"> </span><span class="s2">'bg-blue-50 group-hover:bg-blue-100'</span><span class="s6"> </span><span class="s4">:</span><span class="s6"> </span><span class="s2">'bg-gray-100'</span><span class="s4">}</span><span class="s2">`</span><span class="s4">}&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                </span></span><span class="s4">{</span><span class="s6">isPdfReady </span><span class="s4">?</span><span class="s6"> </span><span class="s4">&lt;</span><span class="s3">Upload</span><span class="s6"> className</span><span class="s4">=</span><span class="s2">"w-12 h-12 text-blue-600"</span><span class="s6"> /&gt; </span><span class="s4">:</span><span class="s6"> </span><span class="s4">&lt;</span><span class="s3">Loader2</span><span class="s6"> className</span><span class="s4">=</span><span class="s2">"w-12 h-12 text-gray-400 animate-spin"</span><span class="s6"> /&gt;</span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;</span><span class="s6">h3 className</span><span class="s4">=</span><span class="s2">"text-2xl font-bold text-gray-900"</span><span class="s4">&gt;{</span><span class="s6">isPdfReady </span><span class="s4">?</span><span class="s6"> </span><span class="s2">'拖曳或點擊上傳 PDF'</span><span class="s6"> </span><span class="s4">:</span><span class="s6"> </span><span class="s2">'初始化引擎中...'</span><span class="s4">}&lt;/</span><span class="s6">h3</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;</span><span class="s2">p className</span><span class="s4">=</span><span class="s5">"text-gray-500 mt-2"</span><span class="s4">&gt;</span><span class="s11">支援多檔案批次處理，資料僅在瀏覽器本地解析</span><span class="s4">&lt;/</span><span class="s2">p</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;/</span><span class="s2">section</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">)}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">{</span><span class="s2">invoices</span><span class="s4">.</span><span class="s2">length </span><span class="s4">&gt;</span><span class="s2"> </span><span class="s10">0</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">(</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"space-y-4"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"font-semibold text-gray-700 px-2 flex items-center gap-2"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                   </span></span><span class="s4">{</span><span class="s2">mode </span><span class="s4">===</span><span class="s2"> </span><span class="s5">'header'</span><span class="s2"> </span><span class="s4">?</span><span class="s2"> </span><span class="s5">'發票主檔列表'</span><span class="s2"> </span><span class="s4">:</span><span class="s2"> </span><span class="s5">'商品明細列表'</span><span class="s4">}</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                   </span></span><span class="s4">&lt;</span><span class="s6">span className</span><span class="s4">=</span><span class="s2">"bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md text-xs font-bold"</span><span class="s4">&gt;{</span><span class="s6">invoices</span><span class="s4">.</span><span class="s6">length</span><span class="s4">}&lt;/</span><span class="s6">span</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"flex gap-3"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                   </span></span><span class="s4">&lt;</span><span class="s6">button onClick</span><span class="s4">={</span><span class="s6">handleExportCsv</span><span class="s4">}</span><span class="s6"> className</span><span class="s4">=</span><span class="s2">"flex items-center gap-2 px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                      </span></span><span class="s4">&lt;</span><span class="s3">Download</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"w-4 h-4"</span><span class="s2"> /&gt; </span><span class="s11">匯出</span><span class="s2"> </span><span class="s3">CSV</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                   </span></span><span class="s4">&lt;/</span><span class="s2">button</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                   </span></span><span class="s4">&lt;</span><span class="s6">button onClick</span><span class="s4">={</span><span class="s6">handleClear</span><span class="s4">}</span><span class="s6"> className</span><span class="s4">=</span><span class="s2">"flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                      </span></span><span class="s4">&lt;</span><span class="s3">Trash2</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"w-4 h-4"</span><span class="s2"> /&gt; </span><span class="s11">清空全部</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                   </span></span><span class="s4">&lt;/</span><span class="s2">button</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">{</span><span class="s2">mode </span><span class="s4">===</span><span class="s2"> </span><span class="s5">'header'</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">(</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"overflow-x-auto"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                  </span></span><span class="s4">&lt;</span><span class="s6">table className</span><span class="s4">=</span><span class="s2">"w-full text-sm text-left whitespace-nowrap"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                    </span></span><span class="s4">&lt;</span><span class="s6">thead className</span><span class="s4">=</span><span class="s2">"bg-gray-50 border-b text-gray-600 font-bold"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                      </span></span><span class="s4">&lt;</span><span class="s2">tr</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">th className</span><span class="s4">=</span><span class="s5">"px-6 py-4"</span><span class="s4">&gt;</span><span class="s11">發票號碼</span><span class="s2"> </span><span class="s4">/</span><span class="s2"> </span><span class="s11">檔名</span><span class="s4">&lt;/</span><span class="s2">th</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">th className</span><span class="s4">=</span><span class="s5">"px-6 py-4"</span><span class="s4">&gt;</span><span class="s11">日期</span><span class="s4">&lt;/</span><span class="s2">th</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">th className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-center"</span><span class="s4">&gt;</span><span class="s11">格式</span><span class="s4">&lt;/</span><span class="s2">th</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">th className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-right"</span><span class="s4">&gt;</span><span class="s11">銷售額</span><span class="s4">&lt;/</span><span class="s2">th</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">th className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-center"</span><span class="s4">&gt;</span><span class="s11">稅別</span><span class="s4">&lt;/</span><span class="s2">th</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">th className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-right"</span><span class="s4">&gt;</span><span class="s11">稅額</span><span class="s4">(</span><span class="s11">金額</span><span class="s4">)&lt;/</span><span class="s2">th</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">th className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-right"</span><span class="s4">&gt;</span><span class="s11">總計</span><span class="s4">&lt;/</span><span class="s2">th</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">th className</span><span class="s4">=</span><span class="s5">"px-6 py-4"</span><span class="s4">&gt;</span><span class="s11">統一編號</span><span class="s4">&lt;/</span><span class="s2">th</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">th className</span><span class="s4">=</span><span class="s5">"px-6 py-4"</span><span class="s4">&gt;</span><span class="s11">賣方名稱</span><span class="s4">&lt;/</span><span class="s2">th</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                      </span></span><span class="s4">&lt;/</span><span class="s2">tr</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span></span><span class="s4">&lt;/</span><span class="s2">thead</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span></span><span class="s4">&lt;</span><span class="s2">tbody className</span><span class="s4">=</span><span class="s5">"divide-y divide-gray-100"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                      </span></span><span class="s4">{</span><span class="s2">invoices</span><span class="s4">.</span><span class="s2">map</span><span class="s4">((</span><span class="s2">inv</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">(</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">tr key</span><span class="s4">={</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">id</span><span class="s4">}</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"hover:bg-gray-50/80 transition-colors"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s2">td className</span><span class="s4">=</span><span class="s5">"px-6 py-4"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                            </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"font-mono font-bold text-blue-700 text-base"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">invoiceNumber </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'-'</span><span class="s4">}&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                            </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"text-xs text-gray-400 mt-0.5 truncate max-w-[150px]"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">fileName</span><span class="s4">}&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;/</span><span class="s2">td</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s2">td className</span><span class="s4">=</span><span class="s5">"px-6 py-4 font-medium text-gray-600"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">date</span><span class="s4">}&lt;/</span><span class="s2">td</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s2">td className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-center text-gray-500"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">format </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'-'</span><span class="s4">}&lt;/</span><span class="s2">td</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s2">td className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-right font-mono text-gray-700"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">salesTotal </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'-'</span><span class="s4">}&lt;/</span><span class="s2">td</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s2">td className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-center"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                             </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"flex gap-1 justify-center"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                               </span></span><span class="s4">{</span><span class="s6">inv</span><span class="s4">.</span><span class="s6">taxTypeTaxable </span><span class="s4">&amp;&amp;</span><span class="s6"> </span><span class="s4">&lt;</span><span class="s6">span className</span><span class="s4">=</span><span class="s2">"bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[10px] font-bold"</span><span class="s4">&gt;</span><span class="s11">應稅</span><span class="s4">&lt;/</span><span class="s6">span</span><span class="s4">&gt;}</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                               </span></span><span class="s4">{</span><span class="s6">inv</span><span class="s4">.</span><span class="s6">taxTypeZero </span><span class="s4">&amp;&amp;</span><span class="s6"> </span><span class="s4">&lt;</span><span class="s6">span className</span><span class="s4">=</span><span class="s2">"bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px] font-bold"</span><span class="s4">&gt;</span><span class="s11">零稅</span><span class="s4">&lt;/</span><span class="s6">span</span><span class="s4">&gt;}</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                               </span></span><span class="s4">{</span><span class="s6">inv</span><span class="s4">.</span><span class="s6">taxTypeExempt </span><span class="s4">&amp;&amp;</span><span class="s6"> </span><span class="s4">&lt;</span><span class="s6">span className</span><span class="s4">=</span><span class="s2">"bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[10px] font-bold"</span><span class="s4">&gt;</span><span class="s11">免稅</span><span class="s4">&lt;/</span><span class="s6">span</span><span class="s4">&gt;}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                             </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;/</span><span class="s2">td</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s2">td className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-right font-mono text-gray-700"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">taxAmount </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'-'</span><span class="s4">}&lt;/</span><span class="s2">td</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s6">td className</span><span class="s4">=</span><span class="s2">"px-6 py-4 text-right font-mono font-bold text-gray-900 text-base"</span><span class="s4">&gt;{</span><span class="s6">inv</span><span class="s4">.</span><span class="s6">grandTotal </span><span class="s4">||</span><span class="s6"> </span><span class="s2">'-'</span><span class="s4">}&lt;/</span><span class="s6">td</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s2">td className</span><span class="s4">=</span><span class="s5">"px-6 py-4 font-mono text-gray-600"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">sellerId </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'-'</span><span class="s4">}&lt;/</span><span class="s2">td</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s2">td className</span><span class="s4">=</span><span class="s5">"px-6 py-4 text-gray-700 font-medium truncate max-w-[200px]"</span><span class="s2"> title</span><span class="s4">={</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">sellerName</span><span class="s4">}&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">sellerName </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'-'</span><span class="s4">}&lt;/</span><span class="s2">td</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;/</span><span class="s2">tr</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                      </span></span><span class="s4">))}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span></span><span class="s4">&lt;/</span><span class="s2">tbody</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                  </span></span><span class="s4">&lt;/</span><span class="s2">table</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">)}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">{</span><span class="s2">mode </span><span class="s4">===</span><span class="s2"> </span><span class="s5">'details'</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> invoices</span><span class="s4">.</span><span class="s2">map</span><span class="s4">((</span><span class="s2">inv</span><span class="s4">)</span><span class="s2"> </span><span class="s4">=&gt;</span><span class="s2"> </span><span class="s4">(</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;</span><span class="s6">div key</span><span class="s4">={</span><span class="s6">inv</span><span class="s4">.</span><span class="s6">id</span><span class="s4">}</span><span class="s6"> className</span><span class="s4">=</span><span class="s2">"bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                 </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"p-5 grid grid-cols-12 gap-6 items-start"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                    </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"col-span-12 md:col-span-3 border-r border-gray-100 pr-4"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                       </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"flex items-center gap-2 mb-1.5"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s6">span className</span><span class="s4">=</span><span class="s2">"bg-blue-50 text-blue-700 text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider"</span><span class="s4">&gt;</span><span class="s3">Page</span><span class="s6"> </span><span class="s4">{</span><span class="s6">inv</span><span class="s4">.</span><span class="s6">pageNumber</span><span class="s4">}&lt;/</span><span class="s6">span</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s2">span className</span><span class="s4">=</span><span class="s5">"font-bold text-gray-900 font-mono"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">invoiceNumber </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'無號碼'</span><span class="s4">}&lt;/</span><span class="s2">span</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                       </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                       </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"text-xs text-gray-400 truncate font-medium"</span><span class="s2"> title</span><span class="s4">={</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">fileName</span><span class="s4">}&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">fileName</span><span class="s4">}&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                       </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"text-sm text-gray-500 mt-2 font-medium"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">date</span><span class="s4">}&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                       </span></span><span class="s4">{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">status </span><span class="s4">===</span><span class="s2"> </span><span class="s5">'warning'</span><span class="s2"> </span><span class="s4">&amp;&amp;</span><span class="s2"> </span><span class="s4">(</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"text-[10px] bg-amber-50 text-amber-700 px-2 py-1 rounded-md mt-3 flex items-center gap-1 font-bold"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                             </span></span><span class="s4">&lt;</span><span class="s3">AlertCircle</span><span class="s2"> className</span><span class="s4">=</span><span class="s5">"w-3 h-3"</span><span class="s2"> /&gt; </span><span class="s4">{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">errorMessage</span><span class="s4">}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                          </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                       </span></span><span class="s4">)}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                    </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"col-span-12 md:col-span-9 grid grid-cols-10 gap-3 text-sm"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"col-span-10 md:col-span-4"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"text-[10px] text-gray-400 font-bold uppercase mb-1 tracking-tight"</span><span class="s4">&gt;</span><span class="s11">品名說明</span><span class="s4">&lt;/</span><span class="s6">div</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"whitespace-pre-wrap font-sans font-medium text-gray-800 leading-relaxed"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                             </span></span><span class="s4">{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">description </span><span class="s4">||</span><span class="s2"> </span><span class="s4">&lt;</span><span class="s2">span className</span><span class="s4">=</span><span class="s5">"text-gray-300 italic"</span><span class="s4">&gt;</span><span class="s11">無明細內容</span><span class="s4">&lt;/</span><span class="s2">span</span><span class="s4">&gt;}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"col-span-5 md:col-span-1 text-right"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"text-[10px] text-gray-400 font-bold uppercase mb-1"</span><span class="s4">&gt;</span><span class="s11">數量</span><span class="s4">&lt;/</span><span class="s6">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"font-mono font-bold text-gray-700"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">quantity </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'-'</span><span class="s4">}&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"col-span-5 md:col-span-1 text-right"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"text-[10px] text-gray-400 font-bold uppercase mb-1"</span><span class="s4">&gt;</span><span class="s11">單價</span><span class="s4">&lt;/</span><span class="s6">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"font-mono text-gray-700"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">unitPrice </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'-'</span><span class="s4">}&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"col-span-5 md:col-span-2 text-right"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"text-[10px] text-gray-400 font-bold uppercase mb-1"</span><span class="s4">&gt;</span><span class="s11">金額</span><span class="s4">&lt;/</span><span class="s6">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"font-mono font-black text-blue-800 text-base"</span><span class="s4">&gt;{</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">amount </span><span class="s4">||</span><span class="s2"> </span><span class="s5">'-'</span><span class="s4">}&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"col-span-5 md:col-span-2 pl-4 md:border-l border-gray-100"</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"text-[10px] text-gray-400 font-bold uppercase mb-1"</span><span class="s4">&gt;</span><span class="s11">備註</span><span class="s4">&lt;/</span><span class="s6">div</span><span class="s4">&gt;</span></p>
-<p class="p4"><span class="s6"><span class="Apple-converted-space">                           </span></span><span class="s4">&lt;</span><span class="s6">div className</span><span class="s4">=</span><span class="s2">"text-xs text-gray-500 leading-snug italic break-all"</span><span class="s4">&gt;{</span><span class="s6">inv</span><span class="s4">.</span><span class="s6">remarks </span><span class="s4">||</span><span class="s6"> </span><span class="s2">'-'</span><span class="s4">}&lt;/</span><span class="s6">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                 </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                 </span></span><span class="s4">&lt;</span><span class="s2">div className</span><span class="s4">=</span><span class="s5">"px-5 pb-4"</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span></span><span class="s4">&lt;</span><span class="s3">Inspector</span><span class="s2"> lines</span><span class="s4">={</span><span class="s2">inv</span><span class="s4">.</span><span class="s2">rawLineString </span><span class="s4">||</span><span class="s2"> </span><span class="s4">[]}</span><span class="s2"> /&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                 </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">              </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">            </span></span><span class="s4">))}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">          </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">        </span></span><span class="s4">)}</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">      </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">    </span></span><span class="s4">&lt;/</span><span class="s2">div</span><span class="s4">&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">  </span></span><span class="s4">);</span></p>
-<p class="p7"><span class="s2">}</span></p>
+<body class="bg-gray-50">
+  <div id="root"></div>
+
+  <script type="text/babel" data-type="module">
+    import { createRoot } from 'react-dom/client';
+    
+    // ==========================================
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  Upload, FileText, Loader2, Trash2, Download, List, 
+  FileSpreadsheet, AlertCircle, ChevronDown, 
+  ChevronUp, ShieldCheck, TrendingUp, PieChart
+} from 'lucide-react';
+
+// --- Configuration ---
+const PDFJS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+const PDFJS_WORKER_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// --- Logic: Data Sanitization ---
+
+// 數值清洗：處理 7.253.00 (點號千分位) 與標準格式
+function toNumber(v) {
+  if (!v) return null;
+  if (typeof v === 'number') return v;
+  let s = v.trim();
+  s = s.replace(/[$,]/g, ""); // 移除 $ 與 ,
+  
+  // 若有多個點，假設最後一個是小數點，其餘是千分位
+  if ((s.match(/\./g) || []).length > 1) {
+    s = s.replace(/\.(?=.*\.)/g, "");
+  }
+  
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+
+// 座標行重組：核心邏輯
+function groupTextItemsToLines(items) {
+  const linesMap = new Map();
+  const lineTolerance = 4;
+
+  for (const item of items) {
+    const transform = item.transform;
+    const y = transform[5];
+    const x = transform[4];
+    const text = item.str || "";
+
+    let key = [...linesMap.keys()].find(k => Math.abs(k - y) <= lineTolerance);
+    if (key === undefined) key = y;
+
+    const arr = linesMap.get(key) || [];
+    arr.push({ x, text });
+    linesMap.set(key, arr);
+  }
+
+  return Array.from(linesMap.entries())
+    .sort((a, b) => b[0] - a[0])
+    .map(([_, arr]) => {
+      return arr.sort((a, b) => a.x - b.x).map(t => t.text).join(" ");
+    });
+}
+
+// --- Logic: Advanced Parsers ---
+
+// 金額抓取：支援寬字距標籤 (e.g. 銷 售 額) 與各式數值
+function pickAmount(text, labelPattern) {
+  const re = new RegExp(`${labelPattern}\\D*?([\\d,.]+)`);
+  const m = text.match(re)?.[1] ?? null;
+  return m ? toNumber(m) : null;
+}
+
+// 賣方區塊鎖定：避免抓到買方資料
+function pickSellerBlock(text) {
+  const m = text.match(/(?:營\s*業\s*人|賣\s*方)\s*[:：][\s\S]{0,300}/);
+  return m?.[0] ?? "";
+}
+
+function parseSeller(text) {
+  const block = pickSellerBlock(text);
+  let seller_name = block.match(/[:：]\s*([^\n]+)/)?.[1]?.trim() || null;
+  const seller_tax_id = block.match(/統\s*一\s*編\s*號\s*[:：.]?\s*(\d{8})/)?.[1] || null;
+  return { seller_name, seller_tax_id };
+}
+
+// 稅別判定：支援跨行與分散關鍵字，新增 √ 符號支援
+function pickTaxType(text) {
+  const taxBlock = text.match(/營\s*業\s*稅[\s\S]{0,150}/)?.[0] ?? text;
+  let taxable = "", zero = "", exempt = "";
+  
+  if (/應\s*稅\s*[:：]?\s*[VvXx✓√]/.test(taxBlock)) taxable = "V";
+  if (/零\s*稅\s*率\s*[:：]?\s*[VvXx✓√]/.test(taxBlock)) zero = "V";
+  if (/免\s*稅\s*[:：]?\s*[VvXx✓√]/.test(taxBlock)) exempt = "V";
+
+  if (!taxable && !zero && !exempt) {
+     if (/應\s*稅/.test(text) && !/零\s*稅/.test(text) && !/免\s*稅/.test(text)) taxable = "V";
+  }
+  return taxable ? "V" : (zero ? "Zero" : (exempt ? "Exempt" : "")); 
+}
+
+// --- Logic: Mode 1 - Header ---
+
+function parseInvoiceHeader(lines) {
+  const fullText = lines.join("\n");
+  const mInv = fullText.match(/(?:發\s*票\s*號\s*碼|號\s*碼)[：:.]?\s*([A-Z]{2}[- ]?\d{8})/);
+  const invoiceNumber = mInv ? mInv[1].replace(/[- ]/g, '') : "";
+  const mFormat = fullText.match(/(?:格\s*式)[：:.]?\s*(\d{2})/);
+  const format = mFormat ? mFormat[1] : "";
+  const mDate = fullText.match(/(\d{4}[-/]\d{2}[-/]\d{2})/);
+  const date = mDate ? mDate[1] : "";
+  const { seller_name, seller_tax_id } = parseSeller(fullText);
+  const taxStatus = pickTaxType(fullText);
+
+  return {
+    invoiceNumber, format, date,
+    salesTotal: pickAmount(fullText, "銷\\s*售\\s*額\\s*合\\s*計")?.toString(),
+    taxAmount: pickAmount(fullText, "(?:營\\s*業\\s*稅\\s*額|營\\s*業\\s*稅|稅\\s*額)")?.toString(),
+    grandTotal: pickAmount(fullText, "總\\s*計")?.toString(),
+    sellerId: seller_tax_id || "",
+    sellerName: seller_name || "",
+    taxTypeTaxable: taxStatus === "V" ? "V" : "",
+    taxTypeZero: taxStatus === "Zero" ? "V" : "",
+    taxTypeExempt: taxStatus === "Exempt" ? "V" : ""
+  };
+}
+
+// --- Logic: Mode 2 - Details ---
+
+function parseItemRow(line) {
+  const normalized = line.replace(/\s+/g, " ").trim();
+  const regexp = /^(.+)\s+([-]?[\d,.]+)\s+([-]?[$]?[\d,.]+)\s+([-]?[$]?[\d,.]+)(?:\s+(.*))?$/;
+  const m = normalized.match(regexp);
+  if (!m) return null;
+  const cleanName = m[1].replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2').trim();
+
+  return {
+    description: cleanName,
+    quantity: m[2],
+    unitPrice: m[3].replace(/[$,]/g, ""), 
+    amount: m[4].replace(/[$,]/g, ""), 
+    remarks: m[5] ? m[5].trim() : ""
+  };
+}
+
+function parseInvoiceDetails(lines, invoiceNumberVal, dateVal) {
+  const results = [];
+  let startIndex = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes("品") && (lines[i].includes("數") || lines[i].includes("額"))) {
+      startIndex = i + 1;
+      break;
+    }
+  }
+
+  if (startIndex !== -1) {
+    for (let i = startIndex; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      if (line.match(/(總\s*計|合\s*計|銷\s*售\s*額|營\s*業\s*稅|賣\s*方|統\s*一\s*編\s*號)/)) break;
+      const row = parseItemRow(line);
+      if (row && !isNaN(Number(row.amount))) {
+        results.push({ invoiceNumber: invoiceNumberVal, date: dateVal, ...row });
+      }
+    }
+  }
+  return results;
+}
+
+// --- Service: Orchestrator ---
+
+const extractDataFromPdf = async (file, mode) => {
+  const pdfjsLib = window.pdfjsLib;
+  if (!pdfjsLib) throw new Error('PDF 核心尚未載入');
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const extractedItems = [];
+
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum);
+    const textContent = await page.getTextContent();
+    const lines = groupTextItemsToLines(textContent.items);
+    const headerData = parseInvoiceHeader(lines);
+
+    if (mode === 'header') {
+      if (headerData.invoiceNumber || headerData.grandTotal) {
+        extractedItems.push({ ...headerData, pageNumber: pageNum, rawLineString: lines });
+      }
+    } else {
+      const details = parseInvoiceDetails(lines, headerData.invoiceNumber || "", headerData.date || "");
+      if (details.length > 0) {
+        details.forEach(d => extractedItems.push({ ...d, pageNumber: pageNum, rawLineString: lines }));
+      } else if (headerData.invoiceNumber) {
+         extractedItems.push({
+             invoiceNumber: headerData.invoiceNumber, date: headerData.date,
+             description: "", quantity: "", unitPrice: "", amount: "",
+             status: 'warning', errorMessage: '未偵測到明細', pageNumber: pageNum, rawLineString: lines
+         });
+      }
+    }
+  }
+  return extractedItems;
+};
+
+// --- Components ---
+
+const Inspector = ({ lines }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  if (!lines || lines.length === 0) return null;
+  return (
+    <div className="mt-2 border-t border-gray-100 pt-2">
+      <button onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-1 text-xs text-blue-600 font-medium">
+        {isOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+        {isOpen ? '隱藏原始資料' : '檢視原始資料'}
+      </button>
+      {isOpen && (
+        <div className="mt-2 p-3 bg-gray-800 text-green-400 font-mono text-xs rounded overflow-x-auto max-h-40">
+          {lines.map((l, i) => <div key={i}>{i}: {l}</div>)}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const StatsCard = ({ title, value, icon: Icon, colorClass, iconBgClass }) => (
+  <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4 transition-all hover:shadow-md">
+    <div className={`p-4 rounded-2xl ${iconBgClass}`}>
+      <Icon className={`w-6 h-6 ${colorClass}`} />
+    </div>
+    <div>
+      <p className="text-sm font-bold text-gray-500 mb-1">{title}</p>
+      <h3 className="text-2xl font-black text-slate-800">
+        ${(value || 0).toLocaleString()}
+      </h3>
+    </div>
+  </div>
+);
+
+export default function App() {
+  const [invoices, setInvoices] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [mode, setMode] = useState('header');
+  const [isPdfReady, setIsPdfReady] = useState(false);
+
+  // 統計數值計算
+  const stats = useMemo(() => {
+    if (mode !== 'header' || invoices.length === 0) return null;
+    return invoices.reduce((acc, inv) => ({
+      salesTotal: acc.salesTotal + (toNumber(inv.salesTotal) || 0),
+      taxTotal: acc.taxTotal + (toNumber(inv.taxAmount) || 0),
+      grandTotal: acc.grandTotal + (toNumber(inv.grandTotal) || 0)
+    }), { salesTotal: 0, taxTotal: 0, grandTotal: 0 });
+  }, [invoices, mode]);
+
+  useEffect(() => {
+    if (window.pdfjsLib) {
+      setIsPdfReady(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = PDFJS_CDN;
+    script.async = true;
+    script.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_CDN;
+      setIsPdfReady(true);
+    };
+    document.body.appendChild(script);
+  }, []);
+
+  useEffect(() => {
+    if (files.length > 0 && isPdfReady) reparseFiles();
+  }, [files, isPdfReady, mode]);
+
+  const reparseFiles = async () => {
+    const newItems = [];
+    for (const file of files) {
+      try {
+        const results = await extractDataFromPdf(file, mode);
+        const rows = results.map((res, idx) => ({
+          id: `${file.name}-${idx}-${Math.random()}`,
+          fileName: file.name,
+          status: res.status || 'success',
+          ...res
+        }));
+        newItems.push(...rows);
+      } catch (e) { console.error(e); }
+    }
+    setInvoices(newItems);
+  };
+
+  const handleFiles = (fileList) => {
+    if (!fileList) return;
+    setFiles(prev => [...prev, ...Array.from(fileList)]);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (isPdfReady) handleFiles(e.dataTransfer.files);
+  };
+
+  const handleClear = () => { setInvoices([]); setFiles([]); };
+
+  const handleExportCsv = () => {
+    let headers;
+    let rowMapper;
+    if (mode === 'header') {
+        headers = ['檔案', '發票號碼', '格式', '開立日期', '銷售額', '應稅', '零稅率', '免稅', '稅額(金額)', '總計', '統一編號', '賣方名稱'];
+        rowMapper = (inv) => [
+            inv.fileName, inv.invoiceNumber, inv.format, inv.date, 
+            inv.salesTotal, inv.taxTypeTaxable, inv.taxTypeZero, inv.taxTypeExempt, 
+            inv.taxAmount, inv.grandTotal, inv.sellerId, inv.sellerName
+        ].map(s => `"${(s || '').replace(/"/g, '""')}"`);
+    } else {
+        headers = ['檔案', '發票號碼', '日期', '品名', '數量', '單價', '金額', '備註'];
+        rowMapper = (inv) => [
+            inv.fileName, inv.invoiceNumber, inv.date, 
+            inv.description, inv.quantity, inv.unitPrice, inv.amount, inv.remarks
+        ].map(s => `"${(s || '').replace(/"/g, '""')}"`);
+    }
+    const csvContent = [headers.join(','), ...invoices.map(inv => rowMapper(inv).join(','))].join('\n');
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `invoices_${mode}_${new Date().toISOString().slice(0,10)}.csv`;
+    link.click();
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 text-gray-800 p-8 font-sans">
+      <div className="max-w-7xl mx-auto space-y-6">
+        
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 flex-wrap">
+              <FileText className="w-8 h-8 text-blue-600" />
+              電子發票解析器 (雙模式)
+              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 rounded-lg text-base font-bold tracking-wide shadow-sm">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                1.6.1 (定版)
+              </div>
+            </h1>
+            <p className="text-gray-500">支援「主檔模式」與「明細模式」切換</p>
+          </div>
+          
+          <div className="flex bg-white p-1 rounded-xl border border-gray-300 shadow-sm">
+             <button
+                onClick={() => setMode('header')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'header' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:bg-gray-100'}`}
+             >
+                <FileSpreadsheet className="w-4 h-4" />
+                模式 1：發票主檔
+             </button>
+             <button
+                onClick={() => setMode('details')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'details' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:bg-gray-100'}`}
+             >
+                <List className="w-4 h-4" />
+                模式 2：明細列表
+             </button>
+          </div>
+        </header>
+
+        {/* 統計資訊區塊 */}
+        {mode === 'header' && stats && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
+            <StatsCard 
+              title="總銷售金額 (未稅)" 
+              value={stats.salesTotal} 
+              icon={TrendingUp} 
+              colorClass="text-blue-600"
+              iconBgClass="bg-blue-50"
+            />
+            <StatsCard 
+              title="估算總稅額" 
+              value={stats.taxTotal} 
+              icon={PieChart} 
+              colorClass="text-amber-600"
+              iconBgClass="bg-amber-50"
+            />
+            <StatsCard 
+              title="應付總計 (含稅)" 
+              value={stats.grandTotal} 
+              icon={ShieldCheck} 
+              colorClass="text-emerald-600"
+              iconBgClass="bg-emerald-50"
+            />
+          </div>
+        )}
+
+        {invoices.length === 0 && (
+          <section 
+            className={`border-2 border-dashed rounded-2xl p-20 text-center transition-all cursor-pointer group 
+              ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white hover:border-blue-400'}
+              ${!isPdfReady ? 'opacity-60 cursor-not-allowed' : ''}`}
+            onDragOver={(e) => { e.preventDefault(); if(isPdfReady) setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            onClick={() => isPdfReady && document.getElementById('fileInput')?.click()}
+          >
+            <input type="file" id="fileInput" multiple accept=".pdf" className="hidden" disabled={!isPdfReady} onChange={(e) => handleFiles(e.target.files)} />
+            <div className="flex flex-col items-center gap-4">
+              <div className={`p-5 rounded-full transition-colors ${isPdfReady ? 'bg-blue-50 group-hover:bg-blue-100' : 'bg-gray-100'}`}>
+                {isPdfReady ? <Upload className="w-12 h-12 text-blue-600" /> : <Loader2 className="w-12 h-12 text-gray-400 animate-spin" />}
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900">{isPdfReady ? '拖曳或點擊上傳 PDF' : '初始化引擎中...'}</h3>
+                <p className="text-gray-500 mt-2">支援多檔案批次處理，資料僅在瀏覽器本地解析</p>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {invoices.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                <div className="font-semibold text-gray-700 px-2 flex items-center gap-2">
+                   {mode === 'header' ? '發票主檔列表' : '商品明細列表'} 
+                   <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md text-xs font-bold">{invoices.length}</span>
+                </div>
+                <div className="flex gap-3">
+                   <button onClick={handleExportCsv} className="flex items-center gap-2 px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                      <Download className="w-4 h-4" /> 匯出 CSV
+                   </button>
+                   <button onClick={handleClear} className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium">
+                      <Trash2 className="w-4 h-4" /> 清空全部
+                   </button>
+                </div>
+            </div>
+
+            {mode === 'header' && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left whitespace-nowrap">
+                    <thead className="bg-gray-50 border-b text-gray-600 font-bold">
+                      <tr>
+                        <th className="px-6 py-4">發票號碼 / 檔名</th>
+                        <th className="px-6 py-4">日期</th>
+                        <th className="px-6 py-4 text-center">格式</th>
+                        <th className="px-6 py-4 text-right">銷售額</th>
+                        <th className="px-6 py-4 text-center">稅別</th>
+                        <th className="px-6 py-4 text-right">稅額(金額)</th>
+                        <th className="px-6 py-4 text-right">總計</th>
+                        <th className="px-6 py-4">統一編號</th>
+                        <th className="px-6 py-4">賣方名稱</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {invoices.map((inv) => (
+                        <tr key={inv.id} className="hover:bg-gray-50/80 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="font-mono font-bold text-blue-700 text-base">{inv.invoiceNumber || '-'}</div>
+                            <div className="text-xs text-gray-400 mt-0.5 truncate max-w-[150px]">{inv.fileName}</div>
+                          </td>
+                          <td className="px-6 py-4 font-medium text-gray-600">{inv.date}</td>
+                          <td className="px-6 py-4 text-center text-gray-500">{inv.format || '-'}</td>
+                          <td className="px-6 py-4 text-right font-mono text-gray-700">{inv.salesTotal || '-'}</td>
+                          <td className="px-6 py-4 text-center">
+                             <div className="flex gap-1 justify-center">
+                               {inv.taxTypeTaxable && <span className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[10px] font-bold">應稅</span>}
+                               {inv.taxTypeZero && <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px] font-bold">零稅</span>}
+                               {inv.taxTypeExempt && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[10px] font-bold">免稅</span>}
+                             </div>
+                          </td>
+                          <td className="px-6 py-4 text-right font-mono text-gray-700">{inv.taxAmount || '-'}</td>
+                          <td className="px-6 py-4 text-right font-mono font-bold text-gray-900 text-base">{inv.grandTotal || '-'}</td>
+                          <td className="px-6 py-4 font-mono text-gray-600">{inv.sellerId || '-'}</td>
+                          <td className="px-6 py-4 text-gray-700 font-medium truncate max-w-[200px]" title={inv.sellerName}>{inv.sellerName || '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {mode === 'details' && invoices.map((inv) => (
+              <div key={inv.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all">
+                 <div className="p-5 grid grid-cols-12 gap-6 items-start">
+                    <div className="col-span-12 md:col-span-3 border-r border-gray-100 pr-4">
+                       <div className="flex items-center gap-2 mb-1.5">
+                          <span className="bg-blue-50 text-blue-700 text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">Page {inv.pageNumber}</span>
+                          <span className="font-bold text-gray-900 font-mono">{inv.invoiceNumber || '無號碼'}</span>
+                       </div>
+                       <div className="text-xs text-gray-400 truncate font-medium" title={inv.fileName}>{inv.fileName}</div>
+                       <div className="text-sm text-gray-500 mt-2 font-medium">{inv.date}</div>
+                       {inv.status === 'warning' && (
+                          <div className="text-[10px] bg-amber-50 text-amber-700 px-2 py-1 rounded-md mt-3 flex items-center gap-1 font-bold">
+                             <AlertCircle className="w-3 h-3" /> {inv.errorMessage}
+                          </div>
+                       )}
+                    </div>
+
+                    <div className="col-span-12 md:col-span-9 grid grid-cols-10 gap-3 text-sm">
+                        <div className="col-span-10 md:col-span-4">
+                           <div className="text-[10px] text-gray-400 font-bold uppercase mb-1 tracking-tight">品名說明</div>
+                           <div className="whitespace-pre-wrap font-sans font-medium text-gray-800 leading-relaxed">
+                             {inv.description || <span className="text-gray-300 italic">無明細內容</span>}
+                           </div>
+                        </div>
+                        <div className="col-span-5 md:col-span-1 text-right">
+                           <div className="text-[10px] text-gray-400 font-bold uppercase mb-1">數量</div>
+                           <div className="font-mono font-bold text-gray-700">{inv.quantity || '-'}</div>
+                        </div>
+                        <div className="col-span-5 md:col-span-1 text-right">
+                           <div className="text-[10px] text-gray-400 font-bold uppercase mb-1">單價</div>
+                           <div className="font-mono text-gray-700">{inv.unitPrice || '-'}</div>
+                        </div>
+                        <div className="col-span-5 md:col-span-2 text-right">
+                           <div className="text-[10px] text-gray-400 font-bold uppercase mb-1">金額</div>
+                           <div className="font-mono font-black text-blue-800 text-base">{inv.amount || '-'}</div>
+                        </div>
+                        <div className="col-span-5 md:col-span-2 pl-4 md:border-l border-gray-100">
+                           <div className="text-[10px] text-gray-400 font-bold uppercase mb-1">備註</div>
+                           <div className="text-xs text-gray-500 leading-snug italic break-all">{inv.remarks || '-'}</div>
+                        </div>
+                    </div>
+                 </div>
+                 <div className="px-5 pb-4">
+                    <Inspector lines={inv.rawLineString || []} />
+                 </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+    // ==========================================
+
+    // 啟動畫面 (請確認您的主元件名稱是否為 App)
+    // 如果不是 App，請將下方的 <App /> 改成您的元件名稱 (例如 <InvoiceSystem />)
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />); 
+  </script>
 </body>
 </html>

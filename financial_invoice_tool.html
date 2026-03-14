@@ -1,60 +1,72 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>電子發票解析器</title>
+  <title>電子發票解析器 (雙模式)</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     body { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   </style>
 </head>
-<body class="bg-gray-50">
-  <div id="root"></div>
+<body class="bg-gray-50 text-gray-800">
+  <div id="app"></div>
 
-  <script type="text/babel">
-    const { useState, useEffect, useMemo } = React;
-
+  <script>
+    const PDFJS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
     const PDFJS_WORKER_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-    if (window.pdfjsLib) {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_CDN;
+    const state = {
+      invoices: [],
+      files: [],
+      isDragging: false,
+      mode: 'header',
+      isPdfReady: false,
+      pdfLoadError: '',
+      selectedPeriod: (() => {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      })(),
+      inspectorOpenMap: {},
+      tests: []
+    };
+
+    function iconSvg(path, className = 'w-4 h-4') {
+      return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="${className}">${path}</svg>`;
     }
 
-    function SvgIcon({ children, className = "w-4 h-4", viewBox = "0 0 24 24" }) {
-      return (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox={viewBox} stroke="currentColor" strokeWidth="2" className={className}>
-          {children}
-        </svg>
-      );
-    }
+    const icons = {
+      upload: (c='w-12 h-12 text-blue-600') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 0-4 4m4-4 4 4M4 20h16" />', c),
+      fileText: (c='w-8 h-8 text-blue-600') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path stroke-linecap="round" stroke-linejoin="round" d="M14 3v5h5" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6M9 17h6M9 9h1" />', c),
+      loader: (c='w-12 h-12 text-gray-400 animate-spin') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-6.219-8.56" />', c),
+      trash: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 6V4h8v2" /><path stroke-linecap="round" stroke-linejoin="round" d="M19 6l-1 14H6L5 6" /><path stroke-linecap="round" stroke-linejoin="round" d="M10 11v6M14 11v6" />', c),
+      download: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16" />', c),
+      list: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13" /><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h.01M3 12h.01M3 18h.01" />', c),
+      fileSheet: (c='w-4 h-4') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path stroke-linecap="round" stroke-linejoin="round" d="M14 3v5h5M8 9h8M8 13h8M8 17h8M12 9v8" />', c),
+      alert: (c='w-3 h-3') => iconSvg('<circle cx="12" cy="12" r="10" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01" />', c),
+      chevronDown: (c='w-3 h-3') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />', c),
+      chevronUp: (c='w-3 h-3') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="m18 15-6-6-6 6" />', c),
+      shield: (c='w-4 h-4 text-emerald-600') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" /><path stroke-linecap="round" stroke-linejoin="round" d="m9 12 2 2 4-4" />', c),
+      trend: (c='w-6 h-6 text-blue-600') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8" /><path stroke-linecap="round" stroke-linejoin="round" d="M14 7h7v7" />', c),
+      pie: (c='w-6 h-6 text-amber-600') => iconSvg('<path stroke-linecap="round" stroke-linejoin="round" d="M12 2v10l8.66 5A10 10 0 1 1 12 2z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 12h10A10 10 0 0 0 12 2z" />', c),
+      calendar: (c='w-4 h-4 text-gray-400') => iconSvg('<rect x="3" y="4" width="18" height="18" rx="2" /><path stroke-linecap="round" stroke-linejoin="round" d="M16 2v4M8 2v4M3 10h18" />', c)
+    };
 
-    const Upload = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 16V4m0 0-4 4m4-4 4 4M4 20h16" /></SvgIcon>;
-    const FileText = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path strokeLinecap="round" strokeLinejoin="round" d="M14 3v5h5" /><path strokeLinecap="round" strokeLinejoin="round" d="M9 13h6M9 17h6M9 9h1" /></SvgIcon>;
-    const Loader2 = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 1 1-6.219-8.56" /></SvgIcon>;
-    const Trash2 = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M3 6h18" /><path strokeLinecap="round" strokeLinejoin="round" d="M8 6V4h8v2" /><path strokeLinecap="round" strokeLinejoin="round" d="M19 6l-1 14H6L5 6" /><path strokeLinecap="round" strokeLinejoin="round" d="M10 11v6M14 11v6" /></SvgIcon>;
-    const Download = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 21h16" /></SvgIcon>;
-    const List = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></SvgIcon>;
-    const FileSpreadsheet = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path strokeLinecap="round" strokeLinejoin="round" d="M14 3v5h5M8 13h8M8 17h8M8 9h8M12 9v8" /></SvgIcon>;
-    const AlertCircle = ({ className }) => <SvgIcon className={className}><circle cx="12" cy="12" r="10" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01" /></SvgIcon>;
-    const ChevronDown = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" /></SvgIcon>;
-    const ChevronUp = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="m18 15-6-6-6 6" /></SvgIcon>;
-    const ShieldCheck = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" /><path strokeLinecap="round" strokeLinejoin="round" d="m9 12 2 2 4-4" /></SvgIcon>;
-    const TrendingUp = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M3 17l6-6 4 4 7-7" /><path strokeLinecap="round" strokeLinejoin="round" d="M14 8h6v6" /></SvgIcon>;
-    const PieChart = ({ className }) => <SvgIcon className={className}><path strokeLinecap="round" strokeLinejoin="round" d="M12 2a10 10 0 1 0 10 10h-10z" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 2a10 10 0 0 1 10 10" /></SvgIcon>;
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
 
     function toNumber(v) {
       if (!v) return null;
       if (typeof v === 'number') return v;
       let s = String(v).trim();
-      s = s.replace(/[$,]/g, "");
-      if ((s.match(/\./g) || []).length > 1) {
-        s = s.replace(/\.(?=.*\.)/g, "");
-      }
+      s = s.replace(/[$,]/g, '');
+      if ((s.match(/\./g) || []).length > 1) s = s.replace(/\.(?=.*\.)/g, '');
       const n = Number(s);
       return Number.isFinite(n) ? n : null;
     }
@@ -62,24 +74,20 @@
     function groupTextItemsToLines(items) {
       const linesMap = new Map();
       const lineTolerance = 4;
-
       for (const item of items) {
-        const transform = item.transform;
+        const transform = item.transform || [];
         const y = transform[5];
         const x = transform[4];
-        const text = item.str || "";
-
+        const text = item.str || '';
         let key = [...linesMap.keys()].find(k => Math.abs(k - y) <= lineTolerance);
         if (key === undefined) key = y;
-
         const arr = linesMap.get(key) || [];
         arr.push({ x, text });
         linesMap.set(key, arr);
       }
-
       return Array.from(linesMap.entries())
         .sort((a, b) => b[0] - a[0])
-        .map(([_, arr]) => arr.sort((a, b) => a.x - b.x).map(t => t.text).join(" "));
+        .map(([_, arr]) => arr.sort((a, b) => a.x - b.x).map(t => t.text).join(' '));
     }
 
     function pickAmount(text, labelPattern) {
@@ -90,7 +98,7 @@
 
     function pickSellerBlock(text) {
       const m = text.match(/(?:營\s*業\s*人|賣\s*方)\s*[:：][\s\S]{0,300}/);
-      return m?.[0] ?? "";
+      return m?.[0] ?? '';
     }
 
     function parseSeller(text) {
@@ -102,56 +110,53 @@
 
     function pickTaxType(text) {
       const taxBlock = text.match(/營\s*業\s*稅[\s\S]{0,150}/)?.[0] ?? text;
-      let taxable = "", zero = "", exempt = "";
-
-      if (/應\s*稅\s*[:：]?\s*[VvXx✓√]/.test(taxBlock)) taxable = "V";
-      if (/零\s*稅\s*率\s*[:：]?\s*[VvXx✓√]/.test(taxBlock)) zero = "V";
-      if (/免\s*稅\s*[:：]?\s*[VvXx✓√]/.test(taxBlock)) exempt = "V";
-
+      let taxable = '', zero = '', exempt = '';
+      if (/應\s*稅\s*[:：]?\s*[VvXx✓√]/.test(taxBlock)) taxable = 'V';
+      if (/零\s*稅\s*率\s*[:：]?\s*[VvXx✓√]/.test(taxBlock)) zero = 'V';
+      if (/免\s*稅\s*[:：]?\s*[VvXx✓√]/.test(taxBlock)) exempt = 'V';
       if (!taxable && !zero && !exempt) {
-        if (/應\s*稅/.test(text) && !/零\s*稅/.test(text) && !/免\s*稅/.test(text)) taxable = "V";
+        if (/應\s*稅/.test(text) && !/零\s*稅/.test(text) && !/免\s*稅/.test(text)) taxable = 'V';
       }
-      return taxable ? "V" : (zero ? "Zero" : (exempt ? "Exempt" : ""));
+      return taxable ? 'V' : (zero ? 'Zero' : (exempt ? 'Exempt' : ''));
     }
 
     function parseInvoiceHeader(lines) {
-      const fullText = lines.join("\n");
+      const fullText = lines.join('\n');
       const mInv = fullText.match(/(?:發\s*票\s*號\s*碼|號\s*碼)[：:.]?\s*([A-Z]{2}[- ]?\d{8})/);
-      const invoiceNumber = mInv ? mInv[1].replace(/[- ]/g, '') : "";
+      const invoiceNumber = mInv ? mInv[1].replace(/[- ]/g, '') : '';
       const mFormat = fullText.match(/(?:格\s*式)[：:.]?\s*(\d{2})/);
-      const format = mFormat ? mFormat[1] : "";
+      const format = mFormat ? mFormat[1] : '';
       const mDate = fullText.match(/(\d{4}[-/]\d{2}[-/]\d{2})/);
-      const date = mDate ? mDate[1] : "";
+      const date = mDate ? mDate[1] : '';
       const { seller_name, seller_tax_id } = parseSeller(fullText);
       const taxStatus = pickTaxType(fullText);
-
       return {
-        invoiceNumber, format, date,
-        salesTotal: pickAmount(fullText, "銷\\s*售\\s*額\\s*合\\s*計")?.toString(),
-        taxAmount: pickAmount(fullText, "(?:營\\s*業\\s*稅\\s*額|營\\s*業\\s*稅|稅\\s*額)")?.toString(),
-        grandTotal: pickAmount(fullText, "總\\s*計")?.toString(),
-        sellerId: seller_tax_id || "",
-        sellerName: seller_name || "",
-        taxTypeTaxable: taxStatus === "V" ? "V" : "",
-        taxTypeZero: taxStatus === "Zero" ? "V" : "",
-        taxTypeExempt: taxStatus === "Exempt" ? "V" : ""
+        invoiceNumber,
+        format,
+        date,
+        salesTotal: pickAmount(fullText, '銷\\s*售\\s*額\\s*合\\s*計')?.toString() || '',
+        taxAmount: pickAmount(fullText, '(?:營\\s*業\\s*稅\\s*額|營\\s*業\\s*稅|稅\\s*額)')?.toString() || '',
+        grandTotal: pickAmount(fullText, '總\\s*計')?.toString() || '',
+        sellerId: seller_tax_id || '',
+        sellerName: seller_name || '',
+        taxTypeTaxable: taxStatus === 'V' ? 'V' : '',
+        taxTypeZero: taxStatus === 'Zero' ? 'V' : '',
+        taxTypeExempt: taxStatus === 'Exempt' ? 'V' : ''
       };
     }
 
     function parseItemRow(line) {
-      const normalized = line.replace(/\s+/g, " ").trim();
-      const regexp = /^(.+?)\s+([-]?[\d,.]+)\s+([-]?[\$]?[\d,.\s]+)\s+([-]?[\$]?[\d,.\s]+)(?:\s+(.*))?$/;
+      const normalized = line.replace(/\s+/g, ' ').trim();
+      const regexp = /^(.+)\s+([-]?[\d,.]+)\s+([-]?[$]?[\d,.]+)\s+([-]?[$]?[\d,.]+)(?:\s+(.*))?$/;
       const m = normalized.match(regexp);
       if (!m) return null;
       const cleanName = m[1].replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2').trim();
-      const cleanNum = (v) => String(v || '').replace(/[^\d.-]/g, '');
-
       return {
         description: cleanName,
-        quantity: cleanNum(m[2]),
-        unitPrice: cleanNum(m[3]),
-        amount: cleanNum(m[4]),
-        remarks: m[5] ? m[5].trim() : ""
+        quantity: m[2],
+        unitPrice: m[3].replace(/[$,]/g, ''),
+        amount: m[4].replace(/[$,]/g, ''),
+        remarks: m[5] ? m[5].trim() : ''
       };
     }
 
@@ -159,55 +164,112 @@
       const results = [];
       let startIndex = -1;
       for (let i = 0; i < lines.length; i++) {
-        if (lines[i].includes("品") && (lines[i].includes("數") || lines[i].includes("額"))) {
+        if (lines[i].includes('品') && (lines[i].includes('數') || lines[i].includes('額'))) {
           startIndex = i + 1;
           break;
         }
       }
-
       if (startIndex !== -1) {
         for (let i = startIndex; i < lines.length; i++) {
           const line = lines[i].trim();
           if (!line) continue;
           if (line.match(/(總\s*計|合\s*計|銷\s*售\s*額|營\s*業\s*稅|賣\s*方|統\s*一\s*編\s*號)/)) break;
           const row = parseItemRow(line);
-          if (row && !isNaN(Number(row.amount))) {
-            results.push({ invoiceNumber: invoiceNumberVal, date: dateVal, ...row });
-          }
+          if (row && !isNaN(Number(row.amount))) results.push({ invoiceNumber: invoiceNumberVal, date: dateVal, ...row });
         }
       }
       return results;
     }
 
+    async function loadPdfJs() {
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_CDN;
+        state.isPdfReady = true;
+        state.pdfLoadError = '';
+        return true;
+      }
+      return new Promise((resolve) => {
+        const existing = document.querySelector('script[data-pdfjs="true"]');
+        if (existing) {
+          existing.addEventListener('load', () => {
+            try {
+              if (!window.pdfjsLib) throw new Error('pdf.js 載入後仍不存在');
+              window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_CDN;
+              state.isPdfReady = true;
+              state.pdfLoadError = '';
+              render();
+              resolve(true);
+            } catch (error) {
+              state.isPdfReady = false;
+              state.pdfLoadError = `PDF 引擎載入失敗：${error.message}`;
+              render();
+              resolve(false);
+            }
+          }, { once: true });
+          existing.addEventListener('error', () => {
+            state.isPdfReady = false;
+            state.pdfLoadError = 'PDF 引擎 CDN 無法載入，請檢查網路或稍後重試';
+            render();
+            resolve(false);
+          }, { once: true });
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = PDFJS_CDN;
+        script.async = true;
+        script.dataset.pdfjs = 'true';
+        script.onload = () => {
+          try {
+            if (!window.pdfjsLib) throw new Error('pdf.js 物件不存在');
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_CDN;
+            state.isPdfReady = true;
+            state.pdfLoadError = '';
+            render();
+            resolve(true);
+          } catch (error) {
+            state.isPdfReady = false;
+            state.pdfLoadError = `PDF 引擎初始化失敗：${error.message}`;
+            render();
+            resolve(false);
+          }
+        };
+        script.onerror = () => {
+          state.isPdfReady = false;
+          state.pdfLoadError = 'PDF 引擎 CDN 無法載入，請檢查網路或稍後重試';
+          render();
+          resolve(false);
+        };
+        document.head.appendChild(script);
+      });
+    }
+
     async function extractDataFromPdf(file, mode) {
       const pdfjsLib = window.pdfjsLib;
-      if (!pdfjsLib) throw new Error('PDF 核心尚未載入');
+      if (!pdfjsLib || !pdfjsLib.getDocument) throw new Error('PDF 核心尚未載入');
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const extractedItems = [];
-
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
         const textContent = await page.getTextContent();
         const lines = groupTextItemsToLines(textContent.items);
         const headerData = parseInvoiceHeader(lines);
-
         if (mode === 'header') {
           if (headerData.invoiceNumber || headerData.grandTotal) {
             extractedItems.push({ ...headerData, pageNumber: pageNum, rawLineString: lines });
           }
         } else {
-          const details = parseInvoiceDetails(lines, headerData.invoiceNumber || "", headerData.date || "");
+          const details = parseInvoiceDetails(lines, headerData.invoiceNumber || '', headerData.date || '');
           if (details.length > 0) {
             details.forEach(d => extractedItems.push({ ...d, pageNumber: pageNum, rawLineString: lines }));
           } else if (headerData.invoiceNumber) {
             extractedItems.push({
               invoiceNumber: headerData.invoiceNumber,
               date: headerData.date,
-              description: "",
-              quantity: "",
-              unitPrice: "",
-              amount: "",
+              description: '',
+              quantity: '',
+              unitPrice: '',
+              amount: '',
               status: 'warning',
               errorMessage: '未偵測到明細',
               pageNumber: pageNum,
@@ -219,306 +281,334 @@
       return extractedItems;
     }
 
-    function Inspector({ lines }) {
-      const [isOpen, setIsOpen] = useState(false);
-      if (!lines || lines.length === 0) return null;
-      return (
-        <div className="mt-2 border-t border-gray-100 pt-2">
-          <button onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-1 text-xs text-blue-600 font-medium">
-            {isOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-            {isOpen ? '隱藏原始資料' : '檢視原始資料'}
-          </button>
-          {isOpen && (
-            <div className="mt-2 p-3 bg-gray-800 text-green-400 font-mono text-xs rounded overflow-x-auto max-h-40 overflow-y-auto">
-              {lines.map((l, i) => <div key={i}>{i}: {l}</div>)}
-            </div>
-          )}
-        </div>
-      );
+    function stats() {
+      if (state.mode !== 'header' || state.invoices.length === 0) return null;
+      return state.invoices.reduce((acc, inv) => ({
+        salesTotal: acc.salesTotal + (toNumber(inv.salesTotal) || 0),
+        taxTotal: acc.taxTotal + (toNumber(inv.taxAmount) || 0),
+        grandTotal: acc.grandTotal + (toNumber(inv.grandTotal) || 0)
+      }), { salesTotal: 0, taxTotal: 0, grandTotal: 0 });
     }
 
-    function StatsCard({ title, value, icon: Icon, colorClass, iconBgClass }) {
-      return (
-        <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4 transition-all hover:shadow-md">
-          <div className={`p-4 rounded-2xl ${iconBgClass}`}>
-            <Icon className={`w-6 h-6 ${colorClass}`} />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-gray-500 mb-1">{title}</p>
-            <h3 className="text-2xl font-black text-slate-800">${(value || 0).toLocaleString()}</h3>
-          </div>
-        </div>
-      );
+    function runTests() {
+      const sample = parseItemRow('贊助費 1 1000 1000 備註');
+      return [
+        { name: 'toNumber multiple dots', pass: toNumber('7.253.00') === 7253 },
+        { name: 'group lines basic', pass: Array.isArray(groupTextItemsToLines([{ transform:[1,0,0,1,10,100], str:'A' }])) },
+        { name: 'parse item row', pass: !!sample && sample.description === '贊助費' && sample.amount === '1000' },
+        { name: 'parse invoice header shape', pass: typeof parseInvoiceHeader(['發票號碼: AB12345678','格式:25','2025-01-01']).invoiceNumber === 'string' },
+        { name: 'pdfjs ready flag boolean', pass: typeof state.isPdfReady === 'boolean' }
+      ];
     }
 
-    function App() {
-      const [invoices, setInvoices] = useState([]);
-      const [files, setFiles] = useState([]);
-      const [isDragging, setIsDragging] = useState(false);
-      const [mode, setMode] = useState('header');
-      const [isPdfReady, setIsPdfReady] = useState(!!window.pdfjsLib);
+    function setState(patch) {
+      Object.assign(state, patch);
+      render();
+    }
 
-      const stats = useMemo(() => {
-        if (mode !== 'header' || invoices.length === 0) return null;
-        return invoices.reduce((acc, inv) => ({
-          salesTotal: acc.salesTotal + (toNumber(inv.salesTotal) || 0),
-          taxTotal: acc.taxTotal + (toNumber(inv.taxAmount) || 0),
-          grandTotal: acc.grandTotal + (toNumber(inv.grandTotal) || 0)
-        }), { salesTotal: 0, taxTotal: 0, grandTotal: 0 });
-      }, [invoices, mode]);
-
-      useEffect(() => {
-        if (window.pdfjsLib) {
-          window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_CDN;
-          setIsPdfReady(true);
+    async function reparseFiles() {
+      if (!state.isPdfReady) {
+        window.alert(state.pdfLoadError || 'PDF 引擎尚未準備完成');
+        return;
+      }
+      const newItems = [];
+      for (const file of state.files) {
+        try {
+          const results = await extractDataFromPdf(file, state.mode);
+          const rows = results.map((res, idx) => ({
+            id: `${file.name}-${idx}-${Math.random()}`,
+            fileName: file.name,
+            status: res.status || 'success',
+            ...res
+          }));
+          newItems.push(...rows);
+        } catch (error) {
+          console.error(error);
+          newItems.push({
+            id: `${file.name}-error-${Math.random()}`,
+            fileName: file.name,
+            status: 'warning',
+            invoiceNumber: '',
+            date: '',
+            description: '',
+            quantity: '',
+            unitPrice: '',
+            amount: '',
+            remarks: '',
+            pageNumber: 0,
+            rawLineString: [`解析失敗：${error.message}`],
+            errorMessage: `解析失敗：${error.message}`
+          });
         }
-      }, []);
-
-      useEffect(() => {
-        if (files.length > 0 && isPdfReady) reparseFiles();
-      }, [files, isPdfReady, mode]);
-
-      async function reparseFiles() {
-        const newItems = [];
-        for (const file of files) {
-          try {
-            const results = await extractDataFromPdf(file, mode);
-            const rows = results.map((res, idx) => ({
-              id: `${file.name}-${idx}-${Math.random()}`,
-              fileName: file.name,
-              status: res.status || 'success',
-              ...res
-            }));
-            newItems.push(...rows);
-          } catch (e) {
-            console.error(e);
-          }
-        }
-        setInvoices(newItems);
       }
+      setState({ invoices: newItems });
+    }
 
-      function handleFiles(fileList) {
-        if (!fileList) return;
-        setFiles(prev => [...prev, ...Array.from(fileList)]);
+    function handleFiles(fileList) {
+      if (!fileList) return;
+      const nextFiles = [...state.files, ...Array.from(fileList)];
+      setState({ files: nextFiles });
+      if (state.isPdfReady) reparseFilesSoon(nextFiles);
+    }
+
+    async function reparseFilesSoon(nextFiles) {
+      state.files = nextFiles;
+      await reparseFiles();
+    }
+
+    function handleExportCsv() {
+      if (!state.invoices || state.invoices.length === 0) {
+        window.alert('目前沒有可匯出的資料');
+        return;
       }
-
-      function handleDrop(e) {
-        e.preventDefault();
-        setIsDragging(false);
-        if (isPdfReady) handleFiles(e.dataTransfer.files);
+      let headers;
+      let rowMapper;
+      if (state.mode === 'header') {
+        headers = ['檔案', '發票號碼', '格式', '開立日期', '銷售額', '應稅', '零稅率', '免稅', '稅額(金額)', '總計', '統一編號', '賣方名稱'];
+        rowMapper = (inv) => [
+          inv.fileName, inv.invoiceNumber, inv.format, inv.date,
+          inv.salesTotal, inv.taxTypeTaxable, inv.taxTypeZero, inv.taxTypeExempt,
+          inv.taxAmount, inv.grandTotal, inv.sellerId, inv.sellerName
+        ].map(s => `"${String(s ?? '').replace(/"/g, '""')}"`);
+      } else {
+        headers = ['檔案', '發票號碼', '日期', '品名', '數量', '單價', '金額', '備註'];
+        rowMapper = (inv) => [
+          inv.fileName, inv.invoiceNumber, inv.date,
+          inv.description, inv.quantity, inv.unitPrice, inv.amount, inv.remarks
+        ].map(s => `"${String(s ?? '').replace(/"/g, '""')}"`);
       }
-
-      function handleClear() {
-        setInvoices([]);
-        setFiles([]);
-      }
-
-      function handleExportCsv() {
-        let headers;
-        let rowMapper;
-        if (mode === 'header') {
-          headers = ['檔案', '發票號碼', '格式', '開立日期', '銷售額', '應稅', '零稅率', '免稅', '稅額(金額)', '總計', '統一編號', '賣方名稱'];
-          rowMapper = (inv) => [
-            inv.fileName, inv.invoiceNumber, inv.format, inv.date,
-            inv.salesTotal, inv.taxTypeTaxable, inv.taxTypeZero, inv.taxTypeExempt,
-            inv.taxAmount, inv.grandTotal, inv.sellerId, inv.sellerName
-          ].map(s => `"${String(s || '').replace(/"/g, '""')}"`);
-        } else {
-          headers = ['檔案', '發票號碼', '日期', '品名', '數量', '單價', '金額', '備註'];
-          rowMapper = (inv) => [
-            inv.fileName, inv.invoiceNumber, inv.date,
-            inv.description, inv.quantity, inv.unitPrice, inv.amount, inv.remarks
-          ].map(s => `"${String(s || '').replace(/"/g, '""')}"`);
-        }
-        const csvContent = [headers.join(','), ...invoices.map(inv => rowMapper(inv).join(','))].join('\n');
-        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const csvContent = [headers.join(','), ...state.invoices.map(inv => rowMapper(inv).join(','))].join('\n');
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const periodSuffix = (state.selectedPeriod || 'unknown').replace('-', '');
+      const filename = `invoices_${state.mode}_${periodSuffix}.csv`;
+      try {
+        const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `invoices_${mode}_${new Date().toISOString().slice(0, 10)}.csv`;
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } catch (error) {
+        console.error('CSV 匯出失敗:', error);
+        window.alert('CSV 匯出失敗，請稍後再試');
       }
+    }
 
-      return (
-        <div className="min-h-screen bg-gray-50 text-gray-800 p-8 font-sans">
-          <div className="max-w-7xl mx-auto space-y-6">
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-              <div className="flex flex-col gap-1">
-                <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 flex-wrap">
-                  <FileText className="w-8 h-8 text-blue-600" />
+    function renderInspector(inv) {
+      const isOpen = !!state.inspectorOpenMap[inv.id];
+      if (!inv.rawLineString || inv.rawLineString.length === 0) return '';
+      return `
+        <div class="mt-2 border-t border-gray-100 pt-2">
+          <button data-inspector-id="${escapeHtml(inv.id)}" class="flex items-center gap-1 text-xs text-blue-600 font-medium">
+            ${isOpen ? icons.chevronUp() : icons.chevronDown()}
+            ${isOpen ? '隱藏原始資料' : '檢視原始資料'}
+          </button>
+          ${isOpen ? `<div class="mt-2 p-3 bg-gray-800 text-green-400 font-mono text-xs rounded overflow-x-auto max-h-40">${inv.rawLineString.map((l, i) => `<div>${i}: ${escapeHtml(l)}</div>`).join('')}</div>` : ''}
+        </div>
+      `;
+    }
+
+    function renderStatsCard(title, value, iconHtml, colorBg) {
+      return `
+        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4 transition-all hover:shadow-md">
+          <div class="p-4 rounded-2xl ${colorBg}">${iconHtml}</div>
+          <div>
+            <p class="text-sm font-bold text-gray-500 mb-1">${escapeHtml(title)}</p>
+            <h3 class="text-2xl font-black text-slate-800">$${(value || 0).toLocaleString()}</h3>
+          </div>
+        </div>
+      `;
+    }
+
+    function render() {
+      const s = stats();
+      const app = document.getElementById('app');
+      app.innerHTML = `
+        <div class="min-h-screen bg-gray-50 text-gray-800 p-8 font-sans">
+          <div class="max-w-7xl mx-auto space-y-6">
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+              <div class="flex flex-col gap-1">
+                <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3 flex-wrap">
+                  ${icons.fileText()}
                   電子發票解析器 (雙模式)
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 rounded-lg text-base font-bold tracking-wide shadow-sm">
-                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                    1.6.1 (定版)
+                  <div class="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 rounded-lg text-base font-bold tracking-wide shadow-sm">
+                    ${icons.shield()}
+                    1.6.2 (穩定版)
                   </div>
                 </h1>
-                <p className="text-gray-500">支援「主檔模式」與「明細模式」切換</p>
+                <p class="text-gray-500">支援「主檔模式」與「明細模式」切換</p>
+                ${state.pdfLoadError ? `<p class="text-red-500 text-sm font-semibold">${escapeHtml(state.pdfLoadError)}</p>` : ''}
               </div>
 
-              <div className="flex bg-white p-1 rounded-xl border border-gray-300 shadow-sm">
-                <button
-                  onClick={() => setMode('header')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'header' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:bg-gray-100'}`}
-                >
-                  <FileSpreadsheet className="w-4 h-4" />
-                  模式 1：發票主檔
-                </button>
-                <button
-                  onClick={() => setMode('details')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'details' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:bg-gray-100'}`}
-                >
-                  <List className="w-4 h-4" />
-                  模式 2：明細列表
-                </button>
+              <div class="flex items-center gap-4 flex-wrap">
+                <div class="flex items-center bg-white px-3 py-2 rounded-xl border border-gray-300 shadow-sm gap-2">
+                  ${icons.calendar()}
+                  <span class="text-xs font-bold text-gray-400 whitespace-nowrap">發票帳月份</span>
+                  <input id="selectedPeriod" type="month" value="${escapeHtml(state.selectedPeriod)}" class="text-sm font-bold text-gray-700 focus:outline-none bg-transparent" />
+                </div>
+
+                <div class="flex bg-white p-1 rounded-xl border border-gray-300 shadow-sm">
+                  <button id="mode-header" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${state.mode === 'header' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:bg-gray-100'}">
+                    ${icons.fileSheet()}
+                    模式 1：發票主檔
+                  </button>
+                  <button id="mode-details" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${state.mode === 'details' ? 'bg-blue-600 text-white shadow' : 'text-gray-600 hover:bg-gray-100'}">
+                    ${icons.list()}
+                    模式 2：明細列表
+                  </button>
+                </div>
               </div>
             </header>
 
-            {mode === 'header' && stats && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <StatsCard title="總銷售金額 (未稅)" value={stats.salesTotal} icon={TrendingUp} colorClass="text-blue-600" iconBgClass="bg-blue-50" />
-                <StatsCard title="估算總稅額" value={stats.taxTotal} icon={PieChart} colorClass="text-amber-600" iconBgClass="bg-amber-50" />
-                <StatsCard title="應付總計 (含稅)" value={stats.grandTotal} icon={ShieldCheck} colorClass="text-emerald-600" iconBgClass="bg-emerald-50" />
-              </div>
-            )}
+            ${state.mode === 'header' && s ? `
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                ${renderStatsCard('總銷售金額 (未稅)', s.salesTotal, icons.trend(), 'bg-blue-50')}
+                ${renderStatsCard('估算總稅額', s.taxTotal, icons.pie(), 'bg-amber-50')}
+                ${renderStatsCard('應付總計 (含稅)', s.grandTotal, icons.shield('w-6 h-6 text-emerald-600'), 'bg-emerald-50')}
+              </div>` : ''}
 
-            {invoices.length === 0 && (
-              <section
-                className={`border-2 border-dashed rounded-2xl p-20 text-center transition-all cursor-pointer group ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white hover:border-blue-400'} ${!isPdfReady ? 'opacity-60 cursor-not-allowed' : ''}`}
-                onDragOver={(e) => { e.preventDefault(); if (isPdfReady) setIsDragging(true); }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={handleDrop}
-                onClick={() => isPdfReady && document.getElementById('fileInput')?.click()}
-              >
-                <input type="file" id="fileInput" multiple accept=".pdf" className="hidden" disabled={!isPdfReady} onChange={(e) => handleFiles(e.target.files)} />
-                <div className="flex flex-col items-center gap-4">
-                  <div className={`p-5 rounded-full transition-colors ${isPdfReady ? 'bg-blue-50 group-hover:bg-blue-100' : 'bg-gray-100'}`}>
-                    {isPdfReady ? <Upload className="w-12 h-12 text-blue-600" /> : <Loader2 className="w-12 h-12 text-gray-400 animate-spin" />}
+            ${state.invoices.length === 0 ? `
+              <section id="dropzone" class="border-2 border-dashed rounded-2xl p-20 text-center transition-all cursor-pointer group ${state.isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white hover:border-blue-400'} ${!state.isPdfReady ? 'opacity-60 cursor-not-allowed' : ''}">
+                <input type="file" id="fileInput" multiple accept=".pdf" class="hidden" ${!state.isPdfReady ? 'disabled' : ''} />
+                <div class="flex flex-col items-center gap-4">
+                  <div class="p-5 rounded-full transition-colors ${state.isPdfReady ? 'bg-blue-50 group-hover:bg-blue-100' : 'bg-gray-100'}">
+                    ${state.isPdfReady ? icons.upload() : icons.loader()}
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900">{isPdfReady ? '拖曳或點擊上傳 PDF' : '初始化引擎中...'}</h3>
-                    <p className="text-gray-500 mt-2">支援多檔案批次處理，資料僅在瀏覽器本地解析</p>
+                    <h3 class="text-2xl font-bold text-gray-900">${state.isPdfReady ? '拖曳或點擊上傳 PDF' : '初始化引擎中...'}</h3>
+                    <p class="text-gray-500 mt-2">支援多檔案批次處理，資料僅在瀏覽器本地解析</p>
                   </div>
                 </div>
-              </section>
-            )}
-
-            {invoices.length > 0 && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-                  <div className="font-semibold text-gray-700 px-2 flex items-center gap-2">
-                    {mode === 'header' ? '發票主檔列表' : '商品明細列表'}
-                    <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md text-xs font-bold">{invoices.length}</span>
+              </section>` : `
+              <div class="space-y-4">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                  <div class="font-semibold text-gray-700 px-2 flex items-center gap-2">
+                    ${state.mode === 'header' ? '發票主檔列表' : '商品明細列表'}
+                    <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md text-xs font-bold">${state.invoices.length}</span>
                   </div>
-                  <div className="flex gap-3">
-                    <button onClick={handleExportCsv} className="flex items-center gap-2 px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                      <Download className="w-4 h-4" /> 匯出 CSV
+                  <div class="flex gap-3">
+                    <button id="exportCsv" class="flex items-center gap-2 px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                      ${icons.download()} 匯出 CSV
                     </button>
-                    <button onClick={handleClear} className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium">
-                      <Trash2 className="w-4 h-4" /> 清空全部
+                    <button id="clearAll" class="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium">
+                      ${icons.trash()} 清空全部
                     </button>
                   </div>
                 </div>
 
-                {mode === 'header' && (
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm text-left whitespace-nowrap">
-                        <thead className="bg-gray-50 border-b text-gray-600 font-bold">
+                ${state.mode === 'header' ? `
+                  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                      <table class="w-full text-sm text-left whitespace-nowrap">
+                        <thead class="bg-gray-50 border-b text-gray-600 font-bold">
                           <tr>
-                            <th className="px-6 py-4">發票號碼 / 檔名</th>
-                            <th className="px-6 py-4">日期</th>
-                            <th className="px-6 py-4 text-center">格式</th>
-                            <th className="px-6 py-4 text-right">銷售額</th>
-                            <th className="px-6 py-4 text-center">稅別</th>
-                            <th className="px-6 py-4 text-right">稅額(金額)</th>
-                            <th className="px-6 py-4 text-right">總計</th>
-                            <th className="px-6 py-4">統一編號</th>
-                            <th className="px-6 py-4">賣方名稱</th>
+                            <th class="px-6 py-4">發票號碼 / 檔名</th>
+                            <th class="px-6 py-4">日期</th>
+                            <th class="px-6 py-4 text-center">格式</th>
+                            <th class="px-6 py-4 text-right">銷售額</th>
+                            <th class="px-6 py-4 text-center">稅別</th>
+                            <th class="px-6 py-4 text-right">稅額(金額)</th>
+                            <th class="px-6 py-4 text-right">總計</th>
+                            <th class="px-6 py-4">統一編號</th>
+                            <th class="px-6 py-4">賣方名稱</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
-                          {invoices.map((inv) => (
-                            <tr key={inv.id} className="hover:bg-gray-50/80 transition-colors">
-                              <td className="px-6 py-4">
-                                <div className="font-mono font-bold text-blue-700 text-base">{inv.invoiceNumber || '-'}</div>
-                                <div className="text-xs text-gray-400 mt-0.5 truncate max-w-[150px]">{inv.fileName}</div>
-                              </td>
-                              <td className="px-6 py-4 font-medium text-gray-600">{inv.date}</td>
-                              <td className="px-6 py-4 text-center text-gray-500">{inv.format || '-'}</td>
-                              <td className="px-6 py-4 text-right font-mono text-gray-700">{inv.salesTotal || '-'}</td>
-                              <td className="px-6 py-4 text-center">
-                                <div className="flex gap-1 justify-center">
-                                  {inv.taxTypeTaxable && <span className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[10px] font-bold">應稅</span>}
-                                  {inv.taxTypeZero && <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px] font-bold">零稅</span>}
-                                  {inv.taxTypeExempt && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[10px] font-bold">免稅</span>}
-                                </div>
-                              </td>
-                              <td className="px-6 py-4 text-right font-mono text-gray-700">{inv.taxAmount || '-'}</td>
-                              <td className="px-6 py-4 text-right font-mono font-bold text-gray-900 text-base">{inv.grandTotal || '-'}</td>
-                              <td className="px-6 py-4 font-mono text-gray-600">{inv.sellerId || '-'}</td>
-                              <td className="px-6 py-4 text-gray-700 font-medium truncate max-w-[200px]" title={inv.sellerName}>{inv.sellerName || '-'}</td>
-                            </tr>
-                          ))}
+                        <tbody class="divide-y divide-gray-100">
+                          ${state.invoices.map(inv => `
+                            <tr class="hover:bg-gray-50/80 transition-colors">
+                              <td class="px-6 py-4"><div class="font-mono font-bold text-blue-700 text-base">${escapeHtml(inv.invoiceNumber || '-')}</div><div class="text-xs text-gray-400 mt-0.5 truncate max-w-[150px]">${escapeHtml(inv.fileName || '')}</div></td>
+                              <td class="px-6 py-4 font-medium text-gray-600">${escapeHtml(inv.date || '-')}</td>
+                              <td class="px-6 py-4 text-center text-gray-500">${escapeHtml(inv.format || '-')}</td>
+                              <td class="px-6 py-4 text-right font-mono text-gray-700">${escapeHtml(inv.salesTotal || '-')}</td>
+                              <td class="px-6 py-4 text-center"><div class="flex gap-1 justify-center">${inv.taxTypeTaxable ? '<span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[10px] font-bold">應稅</span>' : ''}${inv.taxTypeZero ? '<span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px] font-bold">零稅</span>' : ''}${inv.taxTypeExempt ? '<span class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[10px] font-bold">免稅</span>' : ''}</div></td>
+                              <td class="px-6 py-4 text-right font-mono text-gray-700">${escapeHtml(inv.taxAmount || '-')}</td>
+                              <td class="px-6 py-4 text-right font-mono font-bold text-gray-900 text-base">${escapeHtml(inv.grandTotal || '-')}</td>
+                              <td class="px-6 py-4 font-mono text-gray-600">${escapeHtml(inv.sellerId || '-')}</td>
+                              <td class="px-6 py-4 text-gray-700 font-medium truncate max-w-[200px]" title="${escapeHtml(inv.sellerName || '')}">${escapeHtml(inv.sellerName || '-')}</td>
+                            </tr>`).join('')}
                         </tbody>
                       </table>
                     </div>
-                  </div>
-                )}
-
-                {mode === 'details' && invoices.map((inv) => (
-                  <div key={inv.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all">
-                    <div className="p-5 grid grid-cols-12 gap-6 items-start">
-                      <div className="col-span-12 md:col-span-3 border-r border-gray-100 pr-4">
-                        <div className="flex items-center gap-2 mb-1.5">
-                          <span className="bg-blue-50 text-blue-700 text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">Page {inv.pageNumber}</span>
-                          <span className="font-bold text-gray-900 font-mono">{inv.invoiceNumber || '無號碼'}</span>
-                        </div>
-                        <div className="text-xs text-gray-400 truncate font-medium" title={inv.fileName}>{inv.fileName}</div>
-                        <div className="text-sm text-gray-500 mt-2 font-medium">{inv.date}</div>
-                        {inv.status === 'warning' && (
-                          <div className="text-[10px] bg-amber-50 text-amber-700 px-2 py-1 rounded-md mt-3 flex items-center gap-1 font-bold">
-                            <AlertCircle className="w-3 h-3" /> {inv.errorMessage}
+                  </div>` : `
+                  ${state.invoices.map(inv => `
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all">
+                      <div class="p-5 grid grid-cols-12 gap-6 items-start">
+                        <div class="col-span-12 md:col-span-3 border-r border-gray-100 pr-4">
+                          <div class="flex items-center gap-2 mb-1.5">
+                            <span class="bg-blue-50 text-blue-700 text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">Page ${escapeHtml(inv.pageNumber || 0)}</span>
+                            <span class="font-bold text-gray-900 font-mono">${escapeHtml(inv.invoiceNumber || '無號碼')}</span>
                           </div>
-                        )}
-                      </div>
-
-                      <div className="col-span-12 md:col-span-9 grid grid-cols-10 gap-3 text-sm">
-                        <div className="col-span-10 md:col-span-4">
-                          <div className="text-[10px] text-gray-400 font-bold uppercase mb-1 tracking-tight">品名說明</div>
-                          <div className="whitespace-pre-wrap font-sans font-medium text-gray-800 leading-relaxed">
-                            {inv.description || <span className="text-gray-300 italic">無明細內容</span>}
-                          </div>
+                          <div class="text-xs text-gray-400 truncate font-medium" title="${escapeHtml(inv.fileName || '')}">${escapeHtml(inv.fileName || '')}</div>
+                          <div class="text-sm text-gray-500 mt-2 font-medium">${escapeHtml(inv.date || '')}</div>
+                          ${inv.status === 'warning' ? `<div class="text-[10px] bg-amber-50 text-amber-700 px-2 py-1 rounded-md mt-3 flex items-center gap-1 font-bold">${icons.alert()} ${escapeHtml(inv.errorMessage || '')}</div>` : ''}
                         </div>
-                        <div className="col-span-5 md:col-span-1 text-right">
-                          <div className="text-[10px] text-gray-400 font-bold uppercase mb-1">數量</div>
-                          <div className="font-mono font-bold text-gray-700">{inv.quantity || '-'}</div>
-                        </div>
-                        <div className="col-span-5 md:col-span-1 text-right">
-                          <div className="text-[10px] text-gray-400 font-bold uppercase mb-1">單價</div>
-                          <div className="font-mono text-gray-700">{inv.unitPrice || '-'}</div>
-                        </div>
-                        <div className="col-span-5 md:col-span-2 text-right">
-                          <div className="text-[10px] text-gray-400 font-bold uppercase mb-1">金額</div>
-                          <div className="font-mono font-black text-blue-800 text-base">{inv.amount || '-'}</div>
-                        </div>
-                        <div className="col-span-5 md:col-span-2 pl-4 md:border-l border-gray-100">
-                          <div className="text-[10px] text-gray-400 font-bold uppercase mb-1">備註</div>
-                          <div className="text-xs text-gray-500 leading-snug italic break-all">{inv.remarks || '-'}</div>
+                        <div class="col-span-12 md:col-span-9 grid grid-cols-10 gap-3 text-sm">
+                          <div class="col-span-10 md:col-span-4"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1 tracking-tight">品名說明</div><div class="whitespace-pre-wrap font-sans font-medium text-gray-800 leading-relaxed">${inv.description ? escapeHtml(inv.description) : '<span class="text-gray-300 italic">無明細內容</span>'}</div></div>
+                          <div class="col-span-5 md:col-span-1 text-right"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1">數量</div><div class="font-mono font-bold text-gray-700">${escapeHtml(inv.quantity || '-')}</div></div>
+                          <div class="col-span-5 md:col-span-1 text-right"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1">單價</div><div class="font-mono text-gray-700">${escapeHtml(inv.unitPrice || '-')}</div></div>
+                          <div class="col-span-5 md:col-span-2 text-right"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1">金額</div><div class="font-mono font-black text-blue-800 text-base">${escapeHtml(inv.amount || '-')}</div></div>
+                          <div class="col-span-5 md:col-span-2 pl-4 md:border-l border-gray-100"><div class="text-[10px] text-gray-400 font-bold uppercase mb-1">備註</div><div class="text-xs text-gray-500 leading-snug italic break-all">${escapeHtml(inv.remarks || '-')}</div></div>
                         </div>
                       </div>
-                    </div>
-                    <div className="px-5 pb-4">
-                      <Inspector lines={inv.rawLineString || []} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                      <div class="px-5 pb-4">${renderInspector(inv)}</div>
+                    </div>`).join('')}`}
+              </div>`}
+
+            <div class="text-xs text-gray-400 px-1">
+              ${state.tests.map(t => `${t.pass ? '✅' : '❌'} ${escapeHtml(t.name)}`).join('　')}
+            </div>
           </div>
         </div>
-      );
+      `;
+      bindEvents();
     }
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    function bindEvents() {
+      const byId = (id) => document.getElementById(id);
+      const on = (el, event, fn) => { if (el) el.addEventListener(event, fn); };
+
+      on(byId('selectedPeriod'), 'change', (e) => setState({ selectedPeriod: e.target.value }));
+      on(byId('mode-header'), 'click', async () => {
+        setState({ mode: 'header' });
+        if (state.files.length > 0 && state.isPdfReady) await reparseFiles();
+      });
+      on(byId('mode-details'), 'click', async () => {
+        setState({ mode: 'details' });
+        if (state.files.length > 0 && state.isPdfReady) await reparseFiles();
+      });
+      on(byId('exportCsv'), 'click', handleExportCsv);
+      on(byId('clearAll'), 'click', () => setState({ invoices: [], files: [], inspectorOpenMap: {} }));
+
+      const fileInput = byId('fileInput');
+      const dropzone = byId('dropzone');
+      on(fileInput, 'change', (e) => handleFiles(e.target.files));
+      on(dropzone, 'click', () => state.isPdfReady && fileInput && fileInput.click());
+      on(dropzone, 'dragover', (e) => {
+        e.preventDefault();
+        if (state.isPdfReady) setState({ isDragging: true });
+      });
+      on(dropzone, 'dragleave', () => setState({ isDragging: false }));
+      on(dropzone, 'drop', (e) => {
+        e.preventDefault();
+        setState({ isDragging: false });
+        if (state.isPdfReady) handleFiles(e.dataTransfer.files);
+      });
+
+      document.querySelectorAll('[data-inspector-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-inspector-id');
+          state.inspectorOpenMap[id] = !state.inspectorOpenMap[id];
+          render();
+        });
+      });
+    }
+
+    state.tests = runTests();
+    render();
+    loadPdfJs();
   </script>
 </body>
 </html>

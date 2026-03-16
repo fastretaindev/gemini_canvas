@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #4689cc; -webkit-text-stroke: #4689cc}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #c27e65; -webkit-text-stroke: #c27e65}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #8cd3fe; -webkit-text-stroke: #8cd3fe}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca}
+    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #6d7378; -webkit-text-stroke: #6d7378}
+    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #71c083; -webkit-text-stroke: #71c083}
+    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca; min-height: 16.0px}
+    span.s1 {font-kerning: none; background-color: #171818}
+    span.s2 {font-kerning: none; color: #8cd3fe; background-color: #171818; -webkit-text-stroke: 0px #8cd3fe}
+    span.s3 {font-kerning: none; color: #6d6d6d; background-color: #171818; -webkit-text-stroke: 0px #6d6d6d}
+    span.s4 {font-kerning: none; color: #4689cc; background-color: #171818; -webkit-text-stroke: 0px #4689cc}
+    span.s5 {font-kerning: none; color: #cacaca; background-color: #171818; -webkit-text-stroke: 0px #cacaca}
+    span.s6 {font-kerning: none; color: #c27e65; background-color: #171818; -webkit-text-stroke: 0px #c27e65}
+    span.s7 {font-kerning: none; color: #b76ff7; background-color: #171818; -webkit-text-stroke: 0px #b76ff7}
+    span.s8 {font-kerning: none; color: #d4d4d4; background-color: #171818; -webkit-text-stroke: 0px #d4d4d4}
+    span.s9 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE</span><span class="s2"> html</span><span class="s1">&gt;</span></p>
+<p class="p2"><span class="s3">&lt;</span><span class="s4">html</span><span class="s5"> </span><span class="s2">lang</span><span class="s3">=</span><span class="s1">"zh-TW"</span><span class="s3">&gt;</span></p>
+<p class="p1"><span class="s3">&lt;</span><span class="s1">head</span><span class="s3">&gt;</span></p>
+<p class="p3"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s1">charset</span><span class="s3">=</span><span class="s6">"UTF-8"</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"viewport"</span><span class="s5"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"width=device-width, initial-scale=1.0"</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">title</span><span class="s3">&gt;</span><span class="s1">能量拉霸抽獎機系統 - v3.2.0</span><span class="s3">&lt;/</span><span class="s4">title</span><span class="s3">&gt;</span></p>
+<p class="p5"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s1">&lt;!-- 載入外部資源 --&gt;</span></p>
+<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdn.tailwindcss.com"</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://unpkg.com/react@18/umd/react.production.min.js"</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://unpkg.com/@babel/standalone/babel.min.js"</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
+<p class="p1"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s1">style</span><span class="s3">&gt;</span></p>
+<p class="p6"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s7">@import</span><span class="s5"> </span><span class="s6">url</span><span class="s8">(</span><span class="s1">'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@900&amp;display=swap'</span><span class="s8">);</span></p>
+<p class="p1"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">style</span><span class="s3">&gt;</span></p>
+<p class="p1"><span class="s3">&lt;/</span><span class="s1">head</span><span class="s3">&gt;</span></p>
+<p class="p1"><span class="s3">&lt;</span><span class="s1">body</span><span class="s3">&gt;</span></p>
+<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"root"</span><span class="s3">&gt;&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"text/babel"</span><span class="s3">&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const { useState, useEffect, useRef, useCallback } = React;</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>// 自定義 SVG 圖標組件 (取代外部 Lucide 依賴以解決錯誤)</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const Volume2 = ({ size = 16 }) =&gt; (</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"&gt;&lt;/polygon&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;path d="M15.54 8.46a5 5 0 0 1 0 7.07"&gt;&lt;/path&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;path d="M19.07 4.93a10 10 0 0 1 0 14.14"&gt;&lt;/path&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/svg&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const VolumeX = ({ size = 16 }) =&gt; (</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"&gt;&lt;/polygon&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;line x1="22" y1="9" x2="16" y2="15"&gt;&lt;/line&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;line x1="16" y1="9" x2="22" y2="15"&gt;&lt;/line&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/svg&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>// 配置資訊 (與 v3.2.0 完全同步)</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const CONFIG = {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>VERSION: 'v3.2.0',</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>SHEET_ID: '1265_9nKs6BdgIfobRvJPmABJWQkrj212Tpr6eJVM1I8',</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>REEL_COUNT: 3,</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>HEADER_KEYWORDS: ["姓名", "name", "名單", "id", "編號", "部門", "職稱", "department", "title"],</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>DEFAULT_DATA: [{ a: "結果", b: "部門", c: "職稱", d: "姓名" }],</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>INITIAL_IMAGE: 'https://fastretaindev.github.io/gemini_canvas/images/tryall%20logo.png',</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>LEVER_SOUND_URL: 'https://fastretaindev.github.io/gemini_canvas/images/mixkit-game-blood-pop-slide-2363.wav',</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>SPIN_SOUND_URL: 'https://fastretaindev.github.io/gemini_canvas/images/slot-machine2.wav',</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>WINNER_SOUND_URL: 'https://fastretaindev.github.io/gemini_canvas/images/mixkit-successful-horns-fanfare-722.wav',</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>MACHINE_LOGO: 'https://fastretaindev.github.io/gemini_canvas/images/logo4.png',</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>BACKGROUND_IMAGE: 'https://fastretaindev.github.io/gemini_canvas/images/JY.png'</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>};</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const getSecureRandomInt = (max) =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>if (max &lt;= 0) return 0;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const array = new Uint32Array(1);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>window.crypto.getRandomValues(array);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>return array[0] % max;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>};</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const shuffleArray = (array) =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const newArr = [...array];</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>for (let i = newArr.length - 1; i &gt; 0; i--) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const j = getSecureRandomInt(i + 1);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>[newArr[i], newArr[j]] = [newArr[j], newArr[i]];</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>return newArr;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>};</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>function App() {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const [originalList, setOriginalList] = useState([]);<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const [employees, setEmployees] = useState([]);<span class="Apple-converted-space">     </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const [isSpinning, setIsSpinning] = useState(false);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const [isPulling, setIsPulling] = useState(false);<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const [isMuted, setIsMuted] = useState(false);<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const [statusText, setStatusText] = useState("SYSTEM READY");</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const [showNextBtn, setShowNextBtn] = useState(false);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const [winnerObj, setWinnerObj] = useState(null);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const stripRefs = [useRef(null), useRef(null), useRef(null)];</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const leverAudioRef = useRef(null);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const spinAudioRef = useRef(null);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const winnerAudioRef = useRef(null);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>useEffect(() =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>leverAudioRef.current = new Audio(CONFIG.LEVER_SOUND_URL);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>spinAudioRef.current = new Audio(CONFIG.SPIN_SOUND_URL);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>spinAudioRef.current.loop = true;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>winnerAudioRef.current = new Audio(CONFIG.WINNER_SOUND_URL);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>return () =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>[leverAudioRef, spinAudioRef, winnerAudioRef].forEach(ref =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>if (ref.current) ref.current.pause();</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>});</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>};</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>}, []);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>useEffect(() =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>[leverAudioRef, spinAudioRef, winnerAudioRef].forEach(ref =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>if (ref.current) ref.current.muted = isMuted;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>}, [isMuted]);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const getItemHeight = () =&gt; window.innerWidth &gt;= 768 ? 140 : 100;</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const buildStrip = useCallback((stripEl, target, itemCount, colKey, isInitial = false) =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>if (!stripEl) return;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>stripEl.innerHTML = '';</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const itemHeight = getItemHeight();</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const itemClass = "w-full flex items-center justify-center border-b border-slate-100 box-border px-2 leading-tight bg-white";</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const textClass = "text-[1.2rem] md:text-[1.8rem] font-black text-[#1e293b] text-center";</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const setStyle = (el) =&gt; { el.style.height = `${itemHeight}px`; };</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>if (isInitial) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const item = document.createElement('div');</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>item.className = itemClass;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>setStyle(item);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const img = document.createElement('img');</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>img.src = CONFIG.INITIAL_IMAGE;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>img.className = "h-4/5 w-4/5 object-contain";</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>item.appendChild(img);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>stripEl.appendChild(item);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>for (let i = 0; i &lt; itemCount - 1; i++) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>const list = originalList.length &gt; 0 ? originalList : CONFIG.DEFAULT_DATA;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>const randomEntry = list[getSecureRandomInt(list.length)];</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>const item = document.createElement('div');</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>item.className = itemClass + " " + textClass;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>item.innerText = randomEntry[colKey] || "-";</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>setStyle(item);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>stripEl.appendChild(item);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const winnerItem = document.createElement('div');</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>winnerItem.className = itemClass + " " + textClass + " text-[#059669]";<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>winnerItem.innerText = target;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>setStyle(winnerItem);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>stripEl.appendChild(winnerItem);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>stripEl.style.transition = 'none';</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>stripEl.style.transform = `translateY(0px)`;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>}, [originalList]);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const loadNames = useCallback(async () =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setStatusText("CONNECTING...");</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const sheetUrl = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:json`;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>try {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const response = await fetch(sheetUrl);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const text = await response.text();</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>if (!match) throw new Error("Fetch Error");</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const data = JSON.parse(match[1]);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>let rows = data.table.rows;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>if (!rows || rows.length === 0) throw new Error("No Data");</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const isHeader = rows[0].c?.some(cell =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>const val = cell?.v?.toString().toLowerCase() || "";</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>return CONFIG.HEADER_KEYWORDS.some(k =&gt; val.includes(k.toLowerCase()));</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>});</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>if (isHeader) rows = rows.slice(1);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const fetchedData = rows.map(row =&gt; ({</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>a: row.c[0]?.v?.toString().trim() || "",</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>b: row.c[1]?.v?.toString().trim() || "",</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>c: row.c[2]?.v?.toString().trim() || "",</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>d: row.c[3]?.v?.toString().trim() || ""</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>})).filter(item =&gt; item &amp;&amp; (item.a || item.b || item.c || item.d));</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>if (fetchedData.length &gt; 0) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>setOriginalList(fetchedData);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>setEmployees(fetchedData);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>setStatusText("READY");</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>} catch (error) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>setOriginalList(CONFIG.DEFAULT_DATA);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>setEmployees(CONFIG.DEFAULT_DATA);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>setStatusText("OFFLINE MODE");</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>}, []);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>useEffect(() =&gt; { loadNames(); }, [loadNames]);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>useEffect(() =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>if (originalList.length &gt;= 0) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>stripRefs.forEach(ref =&gt; buildStrip(ref.current, null, 1, "", true));</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>}, [originalList, buildStrip]);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const triggerSpin = () =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>if (isSpinning || employees.length === 0) return;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setIsPulling(true);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>if (leverAudioRef.current) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>leverAudioRef.current.currentTime = 0;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>leverAudioRef.current.play().catch(() =&gt; {});</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setTimeout(() =&gt; { spinMachine(); }, 400);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setTimeout(() =&gt; { setIsPulling(false); }, 650);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>};</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const spinMachine = () =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setIsSpinning(true);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setStatusText("SPINNING...");</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setWinnerObj(null);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setShowNextBtn(false);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>if (spinAudioRef.current) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>spinAudioRef.current.currentTime = 0;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>spinAudioRef.current.play().catch(() =&gt; {});</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const shuffledPool = shuffleArray(employees);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const winnerIndex = getSecureRandomInt(shuffledPool.length);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const targetWinner = shuffledPool[winnerIndex];</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const newPool = employees.filter(emp =&gt; emp !== targetWinner);</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const itemHeight = getItemHeight();</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const config = [</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>{ items: 25, duration: 2.2, key: 'b' },</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>{ items: 35, duration: 3.0, key: 'c' },</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>{ items: 45, duration: 3.8, key: 'd' }</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>];</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>stripRefs.forEach((ref, index) =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const strip = ref.current;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const colKey = config[index].key;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>buildStrip(strip, targetWinner[colKey], config[index].items, colKey);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>void strip.offsetWidth;<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>strip.classList.add('blur-[2px]');</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>strip.style.transition = `transform ${config[index].duration}s cubic-bezier(0.1, 0.9, 0.2, 1)`;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const targetY = -((config[index].items - 1) * itemHeight);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>strip.style.transform = `translateY(${targetY}px)`;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">              </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>setTimeout(() =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>strip.classList.remove('blur-[2px]');</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>if (index === 2) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>setIsSpinning(false);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>setWinnerObj(targetWinner);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>setEmployees(newPool);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>setStatusText("WINNER!");</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>if (spinAudioRef.current) spinAudioRef.current.pause();</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>if (winnerAudioRef.current) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>winnerAudioRef.current.currentTime = 0;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>winnerAudioRef.current.play().catch(() =&gt; {});</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>triggerConfetti();</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>if (newPool.length &gt; 0) setShowNextBtn(true);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>}, config[index].duration * 1000);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>};</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const triggerConfetti = () =&gt; {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const colors = ['#ef4444', '#ffffff', '#fbbf24', '#3b82f6', '#059669', '#f472b6'];</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const originX = window.innerWidth / 2;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>const originY = window.innerHeight * 0.7;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>for(let i = 0; i &lt; 150; i++) {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const div = document.createElement('div');</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>div.className = "fixed pointer-events-none z-[1000]";</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const size = Math.random() * 8 + 6;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>div.style.width = `${size}px`; div.style.height = `${size}px`;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>div.style.left = `${originX}px`; div.style.top = `${originY}px`;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>div.style.borderRadius = Math.random() &gt; 0.5 ? '50%' : '2px';</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>div.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>document.body.appendChild(div);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const angle = (Math.random() * Math.PI * 2);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const velocity = 15 + Math.random() * 25;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const tx = Math.cos(angle) * velocity * 15;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const ty = Math.sin(angle) * velocity * 15 + 300;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const rot = 360 + Math.random() * 1080;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>div.animate([</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>{ transform: 'translate(0, 0) rotate(0deg) scale(0)', opacity: 1 },</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>{ offset: 0.2, transform: `translate(${tx * 0.2}px, ${ty * 0.2 - 150}px) rotate(${rot * 0.2}deg) scale(1)`, opacity: 1 },</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>{ transform: `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(0.5)`, opacity: 0 }</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>], { duration: 1500 + Math.random() * 1500, easing: 'cubic-bezier(0, .9, .57, 1)' }).onfinish = () =&gt; div.remove();</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>};</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>return (</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div className="min-h-screen w-full flex flex-col items-center justify-center py-4 px-4 bg-cover bg-center bg-fixed overflow-hidden transition-all duration-700"<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>style={{ backgroundImage: `linear-gradient(to bottom, rgba(241, 245, 249, 0.1), rgba(15, 23, 42, 0.4)), url('${CONFIG.BACKGROUND_IMAGE}')` }}&gt;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">              </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;style&gt;{`</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>.special-text {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>font-family: 'Noto Sans TC', sans-serif;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>font-weight: 900; font-style: italic;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>background: linear-gradient(180deg, #0f766e 0%, #1e293b 100%);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>-webkit-background-clip: text; -webkit-text-fill-color: transparent;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>filter: drop-shadow(2px 2px 0px white) drop-shadow(-2px -2px 0px white) drop-shadow(2px -2px 0px white) drop-shadow(-2px 2px 0px white) drop-shadow(0px 4px 12px rgba(0,0,0,0.2));</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>transform: skewX(-10deg); display: inline-block;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>.winner-pulse { animation: pulse-green 1.2s infinite alternate; }</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>@keyframes pulse-green {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>0% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); border-color: #10b981; }</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>100% { box-shadow: 0 0 40px rgba(16, 185, 129, 1); border-color: #34d399; }</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>.lever-system { perspective: 1200px; }</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>.lever-shaft-group {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>transform-origin: center 90%; transition: transform 0.45s cubic-bezier(0.5, 0, 0.3, 1);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>z-index: 50; display: flex; flex-col; items-center;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>.lever-shaft-group.pulling { transform: rotateX(65deg); }</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>.lever-arm {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>position: relative; overflow: hidden;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>background: linear-gradient(to right, #92400e 0%, #d97706 15%, #fef3c7 45%, #fbbf24 55%, #d97706 85%, #92400e 100%);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>.lever-arm::after {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>content: ''; position: absolute; top: 0; left: 45%; width: 10%; height: 100%;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>background: rgba(255, 255, 255, 0.6); filter: blur(1px);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>.lever-head {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>position: relative; overflow: hidden; background: red;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 6px 6px 15px rgba(255,255,255,0.5), inset -6px -10px 15px rgba(0,0,0,0.5);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>.lever-head::after {</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>content: ''; position: absolute; top: 15%; left: 15%; width: 35%; height: 35%;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>background: rgba(255, 255, 255, 0.5); border-radius: 50%; filter: blur(2px);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>`}&lt;/style&gt;</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div className="text-center mb-6 z-10 px-4"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h1 className="text-4xl md:text-6xl special-text tracking-tighter"&gt;追求卓越 挑戰極限&lt;/h1&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div className="relative flex items-center justify-center max-w-full scale-95 md:scale-100 transition-transform"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div className="relative z-10 p-4 md:p-10 rounded-[40px] bg-gradient-to-br from-slate-100/90 via-slate-300/90 to-slate-400/90 border-4 border-slate-200/50 shadow-[0_30px_80px_rgba(0,0,0,0.3),inset_0_4px_10px_rgba(255,255,255,0.8)] backdrop-blur-sm"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;div className="flex justify-center mb-8"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;img src={CONFIG.MACHINE_LOGO} alt="Brand Logo" className="h-20 md:h-32 object-contain drop-shadow-[0_4px_20px_rgba(16,185,129,0.5)]" /&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;div className="flex justify-center gap-3 md:gap-5 bg-slate-100/50 p-4 md:p-6 rounded-[24px] shadow-[inset_0_4px_25px_rgba(0,0,0,0.2)] relative border border-white/60"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>{[0, 1, 2].map((i) =&gt; (</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;div key={i} className={`w-[85px] md:w-[150px] h-[100px] md:h-[140px] bg-white rounded-xl overflow-hidden relative border-2 border-slate-200 shadow-inner ${winnerObj ? 'winner-pulse' : 'border-slate-300'}`}&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div ref={stripRefs[i]} className="absolute top-0 left-0 w-full flex flex-col"&gt;&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>))}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div className="absolute top-0 left-0 right-0 h-[40%] bg-gradient-to-b from-white/30 to-transparent rounded-t-[24px] pointer-events-none z-20" /&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;div className="lever-system absolute -right-6 md:-right-8 top-1/2 -translate-y-1/2 flex flex-col items-center"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div className={`lever-shaft-group flex flex-col items-center cursor-pointer group ${isPulling ? 'pulling' : ''} ${isSpinning ? 'pointer-events-none' : ''}`}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>onClick={triggerSpin}&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;div className="lever-head w-10 md:w-16 h-10 md:h-16 rounded-full group-hover:scale-105 transition-transform" /&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;div className="lever-arm w-3 md:w-4 h-24 md:h-40 border-x border-amber-900 shadow-[2px_0_10px_rgba(0,0,0,0.3)] -mt-1" /&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div className="w-10 md:w-12 h-10 md:h-12 bg-gradient-to-br from-slate-400 to-slate-600 rounded-full border-4 border-slate-300 shadow-2xl -mt-6 z-10" /&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div className="w-full max-w-xs mt-6 bg-white/40 backdrop-blur-md p-4 rounded-[28px] border border-white/40 shadow-[0_15px_35px_rgba(0,0,0,0.15)] z-10 min-h-[100px] flex flex-col items-center justify-center relative overflow-hidden"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div className="w-full flex flex-col items-center justify-center mb-3 text-center relative z-10"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>{winnerObj ? (</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div className="w-full animate-in fade-in zoom-in duration-500"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;span className="text-slate-600 text-[10px] tracking-[0.2em] uppercase mb-0.5 block font-black"&gt;WINNER&lt;/span&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;span className="text-[#059669] text-2xl md:text-3xl font-black drop-shadow(0 2px 10px rgba(5,150,105,0.3)) leading-tight w-full block"&gt;{winnerObj.a}&lt;/span&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>) : (</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span className="text-slate-500 font-black tracking-widest text-xs uppercase animate-pulse"&gt;{statusText}&lt;/span&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>)}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div className="w-full flex flex-col items-center justify-center gap-3 relative z-10"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>{!showNextBtn ? (</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button onClick={triggerSpin} disabled={isSpinning || employees.length === 0}<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                            </span>className="w-full max-w-[180px] py-2.5 bg-[#10b981] hover:bg-[#059669] text-white font-black text-lg md:text-xl rounded-xl transition-all transform active:scale-95 shadow-[0_6px_15px_rgba(16,185,129,0.3)] uppercase italic disabled:opacity-30"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>Spin!</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>) : (</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button onClick={() =&gt; { setWinnerObj(null); setShowNextBtn(false); setStatusText("READY"); }}<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                            </span>className="w-full max-w-[140px] py-2.5 bg-slate-100/80 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all shadow-md active:scale-95 text-base uppercase tracking-widest"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>NEXT</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>)}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>onClick={() =&gt; setIsMuted(!isMuted)}<span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>className="absolute bottom-3 right-3 text-slate-500 hover:text-slate-800 transition-colors p-1 z-20"</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>title={isMuted ? "Unmute" : "Mute"}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>{isMuted ? &lt;VolumeX size={16} /&gt; : &lt;Volume2 size={16} /&gt;}</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div className="mt-4 opacity-40 text-[9px] text-slate-500 font-mono tracking-widest select-none uppercase z-10"&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>{CONFIG.VERSION} STABLE RELEASE</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>);</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p7"><span class="s9"></span><br></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const root = ReactDOM.createRoot(document.getElementById('root'));</span></p>
+<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>root.render(&lt;App /&gt;);</span></p>
+<p class="p1"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">script</span><span class="s3">&gt;</span></p>
+<p class="p1"><span class="s3">&lt;/</span><span class="s1">body</span><span class="s3">&gt;</span></p>
+<p class="p1"><span class="s3">&lt;/</span><span class="s1">html</span><span class="s3">&gt;</span></p>
+</body>
+</html>
